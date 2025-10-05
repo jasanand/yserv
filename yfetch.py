@@ -34,20 +34,20 @@ async def upsert(tickers, eod_data):
                     # detect gaps
                     max_gap = data.index.diff().days.fillna(0).max()
                     if max_gap >= 5:
-                        logger.warn(f'{max_gap} days gap detected for {ric}, please check!!')
+                        logger.warning(f'{max_gap} days gap detected for {ric}, please check!!')
                     # check if there is an outlier in the data
-                    mu = data['close_px'].rolling(5).mean()
-                    sd = data['close_px'].rolling(5).std()
-                    min_level = mu - 3 * sd # < 3 std
-                    max_level = mu + 3 * sd # > 3 std
+                    mu = data['close_px'].shift(1).rolling(5).mean()
+                    sd = data['close_px'].shift(1).rolling(5).std()
+                    min_level = mu - 5 * sd # < 5 std
+                    max_level = mu + 5 * sd # > 5 std
                     check_max = data['close_px'] > max_level 
                     check_min = data['close_px'] < min_level 
                     if np.any(check_max):
-                        logger.warn(f'Detected outliers for {ric}, please check!')
-                        logger.warn(f"\n{data.loc[check_max,'close_px']}")
+                        logger.warning(f'Detected outliers for {ric} > +5 std, please check!')
+                        logger.warning(f"\n{data.loc[check_max,'close_px']}")
                     if np.any(check_min):
-                        logger.warn(f'Detected outliers for {ric}, please check!')
-                        logger.warn(f"\n{data.loc[check_min,'close_px']}")
+                        logger.warning(f'Detected outliers for {ric} < -5 std, please check!')
+                        logger.warning(f"\n{data.loc[check_min,'close_px']}")
                 # write to parquet file
                 data.to_parquet(file_path, index=True, compression='gzip')
 
