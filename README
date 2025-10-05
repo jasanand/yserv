@@ -50,3 +50,4 @@ Options:
   --port INTEGER  port  [default: 8000]
   --help          Show this message and exit.
 
+Note: postman available at http://host:port/docs when yserv is running
