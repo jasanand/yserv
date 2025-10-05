@@ -18,7 +18,6 @@ async def upsert(tickers, eod_data):
             # derive the adjustment factor
             adjs = eod_data[(ric, 'adj_factor')].ffill()/eod_data[(ric, 'close_px')].ffill()
             eod_data[(ric, 'adj_factor')] = (adjs[::-1]/adjs[::-1].shift(1).fillna(1.0))[::-1]
-            # data checks, winsorisation if any..
             for year, data in eod_data[ric].groupby(eod_data.index.year):
                 dir_path = os.path.join(DB_DIR, f'{ric}')
                 os.makedirs(dir_path, exist_ok=True)
@@ -29,10 +28,28 @@ async def upsert(tickers, eod_data):
                     existing = pd.read_parquet(file_path)
                     # ignore those dates which are there in data
                     ignored = np.isin(existing.index, data.index)
-                    existing = pd.concat((existing[~ignored], data), sort=True)
-                    existing.to_parquet(file_path, index=True, compression='gzip')
-                else:
-                    data.to_parquet(file_path, index=True, compression='gzip')
+                    data = pd.concat((existing[~ignored], data), sort=True)
+                # data checks, winsorisation if any..
+                if len(data) > 5:
+                    # detect gaps
+                    max_gap = data.index.diff().days.fillna(0).max()
+                    if max_gap >= 5:
+                        logger.warn(f'{max_gap} days gap detected for {ric}, please check!!')
+                    # check if there is an outlier in the data
+                    mu = data['close_px'].rolling(5).mean()
+                    sd = data['close_px'].rolling(5).std()
+                    min_level = mu - 3 * sd # < 3 std
+                    max_level = mu + 3 * sd # > 3 std
+                    check_max = data['close_px'] > max_level 
+                    check_min = data['close_px'] < min_level 
+                    if np.any(check_max):
+                        logger.warn(f'Detected outliers for {ric}, please check!')
+                        logger.warn(f"\n{data.loc[check_max,'close_px']}")
+                    if np.any(check_min):
+                        logger.warn(f'Detected outliers for {ric}, please check!')
+                        logger.warn(f"\n{data.loc[check_min,'close_px']}")
+                # write to parquet file
+                data.to_parquet(file_path, index=True, compression='gzip')
 
 async def download(tickers, period, batch=5):
     tickers = tickers.split(',')
