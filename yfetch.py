@@ -6,6 +6,7 @@ from sqlalchemy.dialects.sqlite import insert
 import os
 from logger import logger
 import pandas as pd
+import numpy as np
 
 DB_DIR = './parquet'
 
