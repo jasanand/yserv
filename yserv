@@ -1,0 +1,5 @@
+#!/bin/bash
+# ctrl-c to stop
+python3 yserv.py $@ 2>&1
+# to detach from terminal
+# nohup python3 yserv.py $@ 2>&1

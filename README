@@ -1,0 +1,50 @@
+Demo program to download and serve yahoo finance data via a rest api.
+
+Uses yfinance api to download historical data from yahoo finance.
+
+Utilities:
+
+1. yfetch: downloads data from yahoo finance using yfinance
+           and saves individual tickers as parquet (compression=gzip)
+           files split by year. 
+
+2. yserv:  runs a rest service using fast-api package and provides
+           the following end-points:
+           a. tickers/: 
+                       returns currently save tickers
+           b. returns/{ticker}/{start_date}/{end_date}: 
+                       returns returns for ticker based on 
+                       start/end dates
+           c. returns/{ticker}/{start_date}/{end_date}: 
+                       returns returns for ticker based on 
+                       start/end dates
+
+Requirements: included in requirements.txt (pip freeze)
+
+Data: includes parquet folder with 20+ rics and 2 years worth of data
+
+usage:
+
+ ./yfetch --help
+Usage: yfetch.py [OPTIONS]
+
+  yfinance downloader
+
+Options:
+  --tickers TEXT  ric or , seperated list of rics  [default: NVDA,MSFT,AAPL,GO
+                  OG,AMZN,META,AVGO,TSLA,JPM,WMT,ORCL,LLY,V,MA,NFLX,XOM,JNJ,AB
+                  BV,PLTR,COST,HD,BAC,PG]
+  --period TEXT   1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max  [default: 5d]
+  --help          Show this message and exit.
+
+
+./yserv --help
+Usage: yserv.py [OPTIONS]
+
+  yfinance rest service
+
+Options:
+  --host TEXT     host  [default: 127.0.0.1]
+  --port INTEGER  port  [default: 8000]
+  --help          Show this message and exit.
+
