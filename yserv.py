@@ -8,6 +8,7 @@ from utils import *
 import datetime as dt
 import os
 import pandas as pd
+import numpy as np
 
 app = FastAPI()
 app.add_middleware(GZipMiddleware, minimum_size=1000)
