@@ -1,3 +1,4 @@
+absl-py==2.3.1
 annotated-types==0.7.0
 anyio==4.11.0
 asttokens==3.0.0
@@ -21,6 +22,7 @@ fastapi==0.118.0
 fastjsonschema==2.21.2
 fonttools==4.60.1
 frozendict==2.4.6
+google_benchmark==1.9.4
 greenlet==3.2.4
 h11==0.16.0
 idna==3.10
@@ -52,6 +54,7 @@ peewee==3.18.2
 pexpect==4.9.0
 pickleshare==0.7.5
 pillow==11.3.0
+pipreqs==0.5.0
 platformdirs==4.4.0
 prompt_toolkit==3.0.52
 protobuf==6.32.1
