@@ -15,8 +15,8 @@ Utilities:
            b. returns/{ticker}/{start_date}/{end_date}: 
                        returns returns for ticker based on 
                        start/end dates
-           c. returns/{ticker}/{start_date}/{end_date}: 
-                       returns returns for ticker based on 
+           c. returns/{tickers}/{start_date}/{end_date}: 
+                       returns returns for ticker/s based on 
                        start/end dates
 
 Requirements: included in requirements.txt (pip freeze)
