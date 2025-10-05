@@ -5,6 +5,7 @@ import yfinance as yf
 from sqlalchemy.dialects.sqlite import insert
 import os
 from logger import logger
+import pandas as pd
 
 DB_DIR = './parquet'
 
