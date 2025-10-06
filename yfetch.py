@@ -7,6 +7,7 @@ import os
 from logger import logger
 import pandas as pd
 import numpy as np
+import datetime as dt
 
 DB_DIR = './parquet'
 
@@ -19,6 +20,8 @@ async def upsert(tickers, eod_data):
             adjs = eod_data[(ric, 'adj_factor')].ffill()/eod_data[(ric, 'close_px')].ffill()
             eod_data[(ric, 'adj_factor')] = (adjs[::-1]/adjs[::-1].shift(1).fillna(1.0))[::-1]
             for year, data in eod_data[ric].groupby(eod_data.index.year):
+                # a tab on how much data is being updated
+                data_len = len(data)
                 dir_path = os.path.join(DB_DIR, f'{ric}')
                 os.makedirs(dir_path, exist_ok=True)
                 file_path = os.path.join(dir_path, f'{year}.parquet')
@@ -29,25 +32,43 @@ async def upsert(tickers, eod_data):
                     # ignore those dates which are there in data
                     ignored = np.isin(existing.index, data.index)
                     data = pd.concat((existing[~ignored], data), sort=True)
+                # hold a pointer to data for checks
+                data_ = data
+                # if we dont have much as we could be at the start of the
+                # year, we have to load a bit for checks
+                if len(data) < 5:
+                    lookback_date = data.index[0].date()-dt.timedelta(30)
+                    if lookback_date.year < year:
+                        file_path = os.path.join(dir_path, f'{lookback_date.year}.parquet')
+                        if os.path.exists(file_path):
+                            sel = [("date",">=",lookback_date)]
+                            lookback_data = pd.read_parquet(file_path, filters=sel)
+                            data_ = pd.concat((lookback_data, data_), sort=True)
                 # data checks, winsorisation if any..
-                if len(data) > 5:
+                if len(data_) > 5:
                     # detect gaps
-                    max_gap = data.index.diff().days.fillna(0).max()
+                    max_gap = data_.index.diff().days.fillna(0).max()
                     if max_gap >= 5:
                         logger.warning(f'{max_gap} days gap detected for {ric}, please check!!')
                     # check if there is an outlier in the data
-                    mu = data['close_px'].shift(1).rolling(5).mean()
-                    sd = data['close_px'].shift(1).rolling(5).std()
+                    roll_adj_cum_prod = data_['adj_factor'][::-1].cumprod()[::-1]
+                    data_['adj_close_px'] = data_['close_px'].multiply(roll_adj_cum_prod, axis='rows')
+                    mu = data_['adj_close_px'].shift(1).rolling(5).mean()
+                    sd = data_['adj_close_px'].shift(1).rolling(5).std()
                     min_level = mu - 5 * sd # < 5 std
                     max_level = mu + 5 * sd # > 5 std
-                    check_max = data['close_px'] > max_level 
-                    check_min = data['close_px'] < min_level 
+                    check_max = data_['adj_close_px'] > max_level 
+                    check_min = data_['adj_close_px'] < min_level 
+                    # only check for the length of the new data
+                    check_max.iloc[:-data_len] = False
+                    check_min.iloc[:-data_len] = False
                     if np.any(check_max):
                         logger.warning(f'Detected outliers for {ric} > +5 std, please check!')
-                        logger.warning(f"\n{data.loc[check_max,'close_px']}")
+                        logger.warning(f"\n{data_.loc[check_max,['close_px','adj_close_px']]}")
                     if np.any(check_min):
                         logger.warning(f'Detected outliers for {ric} < -5 std, please check!')
-                        logger.warning(f"\n{data.loc[check_min,'close_px']}")
+                        logger.warning(f"\n{data_.loc[check_min,['close_px','adj_close_px']]}")
+
                 # write to parquet file
                 data.to_parquet(file_path, index=True, compression='gzip')
 
