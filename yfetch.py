@@ -36,8 +36,8 @@ async def upsert(tickers, eod_data):
                 data_ = data
                 # if we dont have much as we could be at the start of the
                 # year, we have to load a bit for checks
-                if len(data) < 5:
-                    lookback_date = data.index[0].date()-dt.timedelta(30)
+                if len(data) < 20:
+                    lookback_date = data.index[0].date()-dt.timedelta(2*20)
                     if lookback_date.year < year:
                         file_path = os.path.join(dir_path, f'{lookback_date.year}.parquet')
                         if os.path.exists(file_path):
@@ -45,29 +45,38 @@ async def upsert(tickers, eod_data):
                             lookback_data = pd.read_parquet(file_path, filters=sel)
                             data_ = pd.concat((lookback_data, data_), sort=True)
                 # data checks, winsorisation if any..
-                if len(data_) > 5:
+                if len(data_) > 20:
                     # detect gaps
                     max_gap = data_.index.diff().days.fillna(0).max()
                     if max_gap >= 5:
                         logger.warning(f'{max_gap} days gap detected for {ric}, please check!!')
                     # check if there is an outlier in the data
+                    # this can be based on either percentage change
+                    # or some std away from a rolling average
                     roll_adj_cum_prod = data_['adj_factor'][::-1].cumprod()[::-1]
                     data_['adj_close_px'] = data_['close_px'].multiply(roll_adj_cum_prod, axis='rows')
+                    data_['c2c_ret'] = ((data_['adj_close_px'].ffill() / data_['adj_close_px'].ffill().shift(1)) - 1.0)*100.0
+                    # rolling mean of 5 days
                     mu = data_['adj_close_px'].shift(1).rolling(5).mean()
                     sd = data_['adj_close_px'].shift(1).rolling(5).std()
                     min_level = mu - 5 * sd # < 5 std
                     max_level = mu + 5 * sd # > 5 std
                     check_max = data_['adj_close_px'] > max_level 
                     check_min = data_['adj_close_px'] < min_level 
+                    # to show the previous entry to the outlier
+                    check_max = check_max | check_max.shift(-1)
+                    check_min = check_min | check_min.shift(-1)
+                    #check_max = check_max.fillna(False).infer_objects(copy=False)
+                    #check_min = check_min.fillna(False).infer_objects(copy=False)
                     # only check for the length of the new data
                     check_max.iloc[:-data_len] = False
                     check_min.iloc[:-data_len] = False
                     if np.any(check_max):
-                        logger.warning(f'Detected outliers for {ric} > +5 std, please check!')
-                        logger.warning(f"\n{data_.loc[check_max,['close_px','adj_close_px']]}")
+                        logger.warning(f'Detected outliers for {ric} > +5 std (based on 5 day rolling mean), please check!')
+                        logger.warning(f"\n{data_.loc[check_max,['close_px','adj_close_px','c2c_ret']]}")
                     if np.any(check_min):
-                        logger.warning(f'Detected outliers for {ric} < -5 std, please check!')
-                        logger.warning(f"\n{data_.loc[check_min,['close_px','adj_close_px']]}")
+                        logger.warning(f'Detected outliers for {ric} < -5 std (based on 5 day rolling mean), please check!')
+                        logger.warning(f"\n{data_.loc[check_min,['close_px','adj_close_px','c2c_ret']]}")
 
                 # write to parquet file
                 data.to_parquet(file_path, index=True, compression='gzip')
