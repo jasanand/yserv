@@ -1,6 +1,7 @@
 import requests
 from logger import logger
 from io import StringIO
+import math
 
 YSERV_URL = 'http://127.0.0.1:8000'
 
@@ -13,7 +14,7 @@ def test_returns():
     response = requests.get(f'{YSERV_URL}/returns/AAPL/20231004/20250926')
     assert response.status_code == 200
     returns = pd.read_json(StringIO(response.text)).set_index('date')
-    assert returns['c2c_ret'].sum() == np.float64(0.4720421852000001)
+    assert math.isclose(returns['c2c_ret'].sum(), np.float64(0.4720421852))
     #logger.info(f'\n{returns.tail()}')
 
 def test_returns_by_date():
@@ -21,7 +22,7 @@ def test_returns_by_date():
     response = requests.get(f'{YSERV_URL}/returns/20250811/NVDA,MSFT,AAPL,GOOG,AMZN,META')
     assert response.status_code == 200
     returns = pd.read_json(StringIO(response.text)).set_index('date')
-    assert returns.sum(axis=1).iloc[0] == np.float64(-0.025334211900000004)
+    assert math.isclose(returns.sum(axis=1).iloc[0], np.float64(-0.0253342119))
     #logger.info(f'\n{returns}')
 
 def test_missing_ric():

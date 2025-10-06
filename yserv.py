@@ -23,7 +23,7 @@ async def get_tickers():
         raise HTTPException(status_code=404, detail="No Tickers found")
     return Response(tickers.to_json(orient='records'), media_type='application/json')
 
-async def get_returns_by_ticker(ticker, start_date, end_date, include_ric=False):
+async def _get_returns_by_ticker(ticker, start_date, end_date, include_ric=False):
     years = np.arange(start_date.year, end_date.year+1, 1)
     if len(years) == 0:
         years = [start_date.year]
@@ -51,37 +51,12 @@ async def get_returns_by_ticker(ticker, start_date, end_date, include_ric=False)
 
     eod_data.fillna(value={'c2c_ret':0.0},inplace=True)
     if include_ric:
-        eod_data['ticker'] = ticker
-        return eod_data[['ticker','c2c_ret']]
+        eod_data.rename(columns={'c2c_ret':ticker}, inplace=True)
+        return eod_data[[ticker]]
     else:
         return eod_data[['c2c_ret']]
 
-@app.get("/returns/{ticker}/{start_date}/{end_date}")
-async def get_returns(ticker, start_date, end_date):
-    ticker = ticker.upper()
-
-    path = Path(DB_DIR)
-    tickers = pd.Series(data=np.sort([p.name for p in path.glob("*") if p.is_dir()]))
-
-    if tickers.empty or not ticker in tickers.values:
-        raise HTTPException(status_code=404, detail="No Tickers found")
-    
-    # get years between start and end date
-    start_date = parse_date(start_date)
-    if not start_date:
-        raise HTTPException(status_code=404, detail="Invalid Start Date")
-    end_date = parse_date(end_date)
-    if not end_date:
-        raise HTTPException(status_code=404, detail="Invalid End Date")
-    if end_date < start_date:
-        raise HTTPException(status_code=404, detail="End Date > Start Date")
-
-    eod_data = await get_returns_by_ticker(ticker, start_date, end_date)
-    #return Response(eod_data[['c2c_ret']].to_json(orient='table',date_format='iso'), media_type='application/json')
-    return Response(eod_data[['c2c_ret']].reset_index().to_json(orient='records',date_format='iso'), media_type='application/json')
-
-@app.get("/returns/{query_date}/{tickers}")
-async def get_returns_by_date(query_date, tickers):
+async def _get_returns_by_tickers(tickers, start_date, end_date):
     tickers = [ticker.upper() for ticker in tickers.split(',')]
 
     path = Path(DB_DIR)
@@ -93,6 +68,32 @@ async def get_returns_by_date(query_date, tickers):
         if not ticker in db_tickers.values:
             raise HTTPException(status_code=404, detail=f"Ticker: {ticker} not found")
     
+    # get years between start and end date
+    start_date = parse_date(start_date)
+    if not start_date:
+        raise HTTPException(status_code=404, detail="Invalid Start Date")
+    end_date = parse_date(end_date)
+    if not end_date:
+        raise HTTPException(status_code=404, detail="Invalid End Date")
+    if end_date < start_date:
+        raise HTTPException(status_code=404, detail="End Date > Start Date")
+
+    eod_data = pd.concat([await _get_returns_by_ticker(ticker, start_date, end_date, include_ric=len(tickers)>1)
+                         for ticker in tickers], sort=False, copy=False, axis=1)
+
+    if eod_data.empty:
+        raise HTTPException(status_code=404, detail="No Ticker/Dates found")
+
+    return eod_data
+
+@app.get("/returns/{tickers}/{start_date}/{end_date}")
+async def get_returns_by_tickers(tickers, start_date, end_date):
+    eod_data = await _get_returns_by_tickers(tickers, start_date, end_date)
+
+    return Response(eod_data.reset_index().to_json(orient='records',date_format='iso'), media_type='application/json')
+
+@app.get("/returns/{query_date}/{tickers}")
+async def get_returns_by_date(query_date, tickers):
     # get year 
     query_date = parse_date(query_date)
     if not query_date:
@@ -102,18 +103,9 @@ async def get_returns_by_date(query_date, tickers):
     start_date = query_date-dt.timedelta(days=5)
     end_date = query_date
 
-    eod_data = pd.concat([await get_returns_by_ticker(ticker, start_date, end_date, include_ric=True)
-                         for ticker in tickers], sort=False, copy=False)
-
-    if eod_data.empty:
-        raise HTTPException(status_code=404, detail="No Ticker/Dates found")
-
-    eod_data = pd.pivot_table(eod_data, index=eod_data.index, columns=['ticker'], values=['c2c_ret'])
-    eod_data = eod_data.droplevel(0, axis=1)
-    eod_data.fillna(0.0,inplace=True)
+    eod_data = await _get_returns_by_tickers(tickers, str(start_date), str(end_date))
     eod_data = eod_data.loc[eod_data.index.date==query_date.date(),:]
 
-    #return Response(eod_data.to_json(orient='table',date_format='iso'), media_type='application/json')
     return Response(eod_data.reset_index().to_json(orient='records',date_format='iso'), media_type='application/json')
 
 @click.command()
