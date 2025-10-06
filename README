@@ -12,14 +12,16 @@ Utilities:
            the following end-points:
            a. tickers/: 
                        returns currently saved tickers
-           b. returns/{ticker}/{start_date}/{end_date}: 
-                       returns returns for ticker based on 
+           b. returns/{tickers}/{start_date}/{end_date}: 
+                       get returns for ticker/s based on 
                        start/end dates
                        eg. returns/AAPL/20231004/20250926
+                           returns/AAPL,AMZN,GOOG,META/20231004/20250926
            c. returns/{query_date}/{tickers}: 
-                       returns returns for ticker/s based on 
+                       get returns for ticker/s based on 
                        query date
-                       eg. returns/20250811/NVDA,MSFT,AAPL,GOOG,AMZN,META
+                       eg. returns/20250811/NVDA
+                           returns/20250811/NVDA,MSFT,AAPL,GOOG,AMZN,META
 
 Requirements: included in requirements.txt (pip freeze)
 
