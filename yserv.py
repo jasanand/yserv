@@ -114,12 +114,7 @@ async def get_returns_by_date(query_date, tickers):
     if not query_date:
         raise HTTPException(status_code=404, detail="Invalid Query Date")
 
-    # need some data for returns as we calculate them on the fly
-    start_date = query_date-dt.timedelta(days=5)
-    end_date = query_date
-
-    eod_data = await _get_returns_by_tickers(tickers, str(start_date), str(end_date))
-    eod_data = eod_data.loc[eod_data.index.date==query_date.date(),:]
+    eod_data = await _get_returns_by_tickers(tickers, str(query_date), str(query_date))
 
     return Response(eod_data.reset_index().to_json(orient='records',date_format='iso'), media_type='application/json')
 
