@@ -9,16 +9,22 @@ import datetime as dt
 import os
 import pandas as pd
 import numpy as np
+from async_lru import alru_cache
 
 app = FastAPI()
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 DB_DIR = os.path.join(os.path.dirname(__file__), "parquet")
 
-@app.get("/tickers/")
-async def get_tickers():
+@alru_cache(maxsize=128)
+async def _get_tickers():
     path = Path(DB_DIR)
     tickers = pd.Series(data=np.sort([p.name for p in path.glob("*") if p.is_dir()]))
+    return tickers
+
+@app.get("/tickers/")
+async def get_tickers():
+    tickers = await _get_tickers()
     if tickers.empty:
         raise HTTPException(status_code=404, detail="No Tickers found")
     return Response(tickers.to_json(orient='records'), media_type='application/json')
@@ -57,16 +63,15 @@ async def _get_returns_by_ticker(ticker, start_date, end_date, include_ric=False
         return eod_data[['c2c_ret']]
 
 async def _get_returns_by_tickers(tickers, start_date, end_date):
-    tickers = [ticker.upper() for ticker in tickers.split(',')]
+    tickers = np.array([ticker.upper() for ticker in tickers.split(',')])
 
-    path = Path(DB_DIR)
-    db_tickers = pd.Series(data=np.sort([p.name for p in path.glob("*") if p.is_dir()]))
+    db_tickers = await _get_tickers()
     if db_tickers.empty:
         raise HTTPException(status_code=404, detail="No Tickers found")
 
-    for ticker in tickers:
-        if not ticker in db_tickers.values:
-            raise HTTPException(status_code=404, detail=f"Ticker: {ticker} not found")
+    missing = ~np.isin(tickers, db_tickers)
+    if np.any(missing):
+        raise HTTPException(status_code=404, detail=f"Tickers: {tickers[missing]} not found")
     
     # get years between start and end date
     start_date = parse_date(start_date)
