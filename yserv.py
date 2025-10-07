@@ -70,10 +70,7 @@ async def _get_returns_by_ticker(ticker, start_date, end_date, include_ric=False
     if eod_data.empty:
         raise HTTPException(status_code=404, detail="No Ticker/Dates found")
 
-    if include_ric:
-        return eod_data[['c2c_ret']].rename(columns={'c2c_ret':ticker})
-    else:
-        return eod_data[['c2c_ret']]
+    return eod_data[['c2c_ret']].rename(columns={'c2c_ret':ticker}) if include_ric else eod_data[['c2c_ret']]
 
 async def _get_returns_by_tickers(tickers, start_date, end_date):
     tickers = np.array([ticker.upper() for ticker in tickers.split(',')])
