@@ -12,6 +12,8 @@ import datetime as dt
 DB_DIR = './parquet'
 
 async def upsert(tickers, eod_data):
+    # ensure we only have weekdays
+    eod_data = eod_data.loc[eod_data.index.weekday < 5] 
     for ric in tickers:
         logger.info(f'Processing {ric}')
         if ric in eod_data.columns.get_level_values(0):
