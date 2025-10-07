@@ -16,7 +16,7 @@ app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 DB_DIR = os.path.join(os.path.dirname(__file__), "parquet")
 
-@alru_cache(maxsize=128)
+@alru_cache(maxsize=1)
 async def _get_tickers():
     path = Path(DB_DIR)
     tickers = pd.Series(data=np.sort([p.name for p in path.glob("*") if p.is_dir()]))
