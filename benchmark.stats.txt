@@ -1,4 +1,4 @@
-2025-10-06T18:49:36+01:00
+2025-10-07T13:10:38+01:00
 Running benchmark.py
 Run on (8 X 1992.01 MHz CPU s)
 CPU Caches:
@@ -6,64 +6,78 @@ CPU Caches:
   L1 Instruction 32 KiB (x4)
   L2 Unified 256 KiB (x4)
   L3 Unified 8192 KiB (x1)
-Load Average: 0.23, 0.15, 0.06
+Load Average: 0.25, 0.12, 0.03
 ***WARNING*** ASLR is enabled, the results may have unreproducible noise in them.
 -------------------------------------------------------------------------------------------------------------------------
 Benchmark                                                                               Time             CPU   Iterations
 -------------------------------------------------------------------------------------------------------------------------
-get_returns_by_ticker_start_end_date/iterations:1/repeats:10                         15.1 ms         2.28 ms            1
-get_returns_by_ticker_start_end_date/iterations:1/repeats:10                         16.2 ms         1.41 ms            1
-get_returns_by_ticker_start_end_date/iterations:1/repeats:10                         16.0 ms         1.28 ms            1
-get_returns_by_ticker_start_end_date/iterations:1/repeats:10                         17.4 ms         1.34 ms            1
-get_returns_by_ticker_start_end_date/iterations:1/repeats:10                         15.4 ms         1.39 ms            1
-get_returns_by_ticker_start_end_date/iterations:1/repeats:10                         14.3 ms         1.25 ms            1
-get_returns_by_ticker_start_end_date/iterations:1/repeats:10                         14.2 ms         1.14 ms            1
-get_returns_by_ticker_start_end_date/iterations:1/repeats:10                         14.5 ms         1.11 ms            1
-get_returns_by_ticker_start_end_date/iterations:1/repeats:10                         14.0 ms         1.20 ms            1
-get_returns_by_ticker_start_end_date/iterations:1/repeats:10                         14.8 ms         1.11 ms            1
-get_returns_by_ticker_start_end_date/iterations:1/repeats:10_mean                    15.2 ms         1.35 ms           10
-get_returns_by_ticker_start_end_date/iterations:1/repeats:10_median                  14.9 ms         1.26 ms           10
-get_returns_by_ticker_start_end_date/iterations:1/repeats:10_stddev                  1.10 ms        0.344 ms           10
-get_returns_by_ticker_start_end_date/iterations:1/repeats:10_cv                      7.25 %         25.49 %            10
-get_returns_by_tickers_start_end_date/iterations:1/repeats:10                         221 ms         3.16 ms            1
-get_returns_by_tickers_start_end_date/iterations:1/repeats:10                         218 ms         2.65 ms            1
-get_returns_by_tickers_start_end_date/iterations:1/repeats:10                         217 ms         2.51 ms            1
-get_returns_by_tickers_start_end_date/iterations:1/repeats:10                         239 ms         4.19 ms            1
-get_returns_by_tickers_start_end_date/iterations:1/repeats:10                         230 ms         3.58 ms            1
-get_returns_by_tickers_start_end_date/iterations:1/repeats:10                         231 ms         3.22 ms            1
-get_returns_by_tickers_start_end_date/iterations:1/repeats:10                         229 ms         3.10 ms            1
-get_returns_by_tickers_start_end_date/iterations:1/repeats:10                         264 ms         2.86 ms            1
-get_returns_by_tickers_start_end_date/iterations:1/repeats:10                         249 ms         2.48 ms            1
-get_returns_by_tickers_start_end_date/iterations:1/repeats:10                         234 ms         2.81 ms            1
-get_returns_by_tickers_start_end_date/iterations:1/repeats:10_mean                    233 ms         3.06 ms           10
-get_returns_by_tickers_start_end_date/iterations:1/repeats:10_median                  231 ms         2.98 ms           10
-get_returns_by_tickers_start_end_date/iterations:1/repeats:10_stddev                 14.7 ms        0.527 ms           10
-get_returns_by_tickers_start_end_date/iterations:1/repeats:10_cv                     6.30 %         17.25 %            10
-get_returns_by_tickers_query_date/iterations:1/repeats:10                             120 ms         1.53 ms            1
-get_returns_by_tickers_query_date/iterations:1/repeats:10                             169 ms         1.47 ms            1
-get_returns_by_tickers_query_date/iterations:1/repeats:10                             142 ms         1.57 ms            1
-get_returns_by_tickers_query_date/iterations:1/repeats:10                             108 ms         1.24 ms            1
-get_returns_by_tickers_query_date/iterations:1/repeats:10                             117 ms         1.50 ms            1
-get_returns_by_tickers_query_date/iterations:1/repeats:10                             103 ms         1.49 ms            1
-get_returns_by_tickers_query_date/iterations:1/repeats:10                             104 ms         1.29 ms            1
-get_returns_by_tickers_query_date/iterations:1/repeats:10                             102 ms         1.48 ms            1
-get_returns_by_tickers_query_date/iterations:1/repeats:10                             112 ms         1.33 ms            1
-get_returns_by_tickers_query_date/iterations:1/repeats:10                             134 ms         1.32 ms            1
-get_returns_by_tickers_query_date/iterations:1/repeats:10_mean                        121 ms         1.42 ms           10
-get_returns_by_tickers_query_date/iterations:1/repeats:10_median                      114 ms         1.47 ms           10
-get_returns_by_tickers_query_date/iterations:1/repeats:10_stddev                     21.4 ms        0.116 ms           10
-get_returns_by_tickers_query_date/iterations:1/repeats:10_cv                        17.70 %          8.16 %            10
-get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10              2124 ms         18.0 ms            1
-get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10              2570 ms         10.4 ms            1
-get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10              2183 ms         11.4 ms            1
-get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10              2225 ms         8.22 ms            1
-get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10              1960 ms         8.37 ms            1
-get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10              2144 ms         8.36 ms            1
-get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10              2306 ms         9.20 ms            1
-get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10              1959 ms         15.2 ms            1
-get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10              2071 ms         10.6 ms            1
-get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10              1797 ms         8.50 ms            1
-get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10_mean         2134 ms         10.8 ms           10
-get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10_median       2134 ms         9.80 ms           10
-get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10_stddev        213 ms         3.31 ms           10
-get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10_cv           9.99 %         30.54 %            10
+get_tickers/iterations:1/repeats:10                                                  4.24 ms         2.86 ms            1
+get_tickers/iterations:1/repeats:10                                                  3.67 ms         2.19 ms            1
+get_tickers/iterations:1/repeats:10                                                  2.65 ms         1.61 ms            1
+get_tickers/iterations:1/repeats:10                                                  2.56 ms         1.43 ms            1
+get_tickers/iterations:1/repeats:10                                                  2.42 ms         1.42 ms            1
+get_tickers/iterations:1/repeats:10                                                  2.20 ms         1.30 ms            1
+get_tickers/iterations:1/repeats:10                                                  2.34 ms         1.42 ms            1
+get_tickers/iterations:1/repeats:10                                                  2.66 ms         1.55 ms            1
+get_tickers/iterations:1/repeats:10                                                  3.15 ms         1.92 ms            1
+get_tickers/iterations:1/repeats:10                                                  2.66 ms         1.74 ms            1
+get_tickers/iterations:1/repeats:10_mean                                             2.85 ms         1.75 ms           10
+get_tickers/iterations:1/repeats:10_median                                           2.65 ms         1.58 ms           10
+get_tickers/iterations:1/repeats:10_stddev                                          0.647 ms        0.476 ms           10
+get_tickers/iterations:1/repeats:10_cv                                              22.68 %         27.24 %            10
+get_returns_by_ticker_start_end_date/iterations:1/repeats:10                         13.1 ms         1.54 ms            1
+get_returns_by_ticker_start_end_date/iterations:1/repeats:10                         13.3 ms         1.71 ms            1
+get_returns_by_ticker_start_end_date/iterations:1/repeats:10                         12.8 ms         1.10 ms            1
+get_returns_by_ticker_start_end_date/iterations:1/repeats:10                         14.6 ms         1.15 ms            1
+get_returns_by_ticker_start_end_date/iterations:1/repeats:10                         13.2 ms         1.25 ms            1
+get_returns_by_ticker_start_end_date/iterations:1/repeats:10                         12.8 ms         1.03 ms            1
+get_returns_by_ticker_start_end_date/iterations:1/repeats:10                         12.4 ms         1.01 ms            1
+get_returns_by_ticker_start_end_date/iterations:1/repeats:10                         13.0 ms         1.73 ms            1
+get_returns_by_ticker_start_end_date/iterations:1/repeats:10                         12.9 ms         1.24 ms            1
+get_returns_by_ticker_start_end_date/iterations:1/repeats:10                         12.7 ms         1.11 ms            1
+get_returns_by_ticker_start_end_date/iterations:1/repeats:10_mean                    13.1 ms         1.29 ms           10
+get_returns_by_ticker_start_end_date/iterations:1/repeats:10_median                  12.9 ms         1.20 ms           10
+get_returns_by_ticker_start_end_date/iterations:1/repeats:10_stddev                 0.602 ms        0.271 ms           10
+get_returns_by_ticker_start_end_date/iterations:1/repeats:10_cv                      4.60 %         21.07 %            10
+get_returns_by_tickers_start_end_date/iterations:1/repeats:10                         204 ms         3.11 ms            1
+get_returns_by_tickers_start_end_date/iterations:1/repeats:10                         208 ms         2.80 ms            1
+get_returns_by_tickers_start_end_date/iterations:1/repeats:10                         206 ms         2.94 ms            1
+get_returns_by_tickers_start_end_date/iterations:1/repeats:10                         207 ms         2.86 ms            1
+get_returns_by_tickers_start_end_date/iterations:1/repeats:10                         208 ms         2.94 ms            1
+get_returns_by_tickers_start_end_date/iterations:1/repeats:10                         206 ms         2.94 ms            1
+get_returns_by_tickers_start_end_date/iterations:1/repeats:10                         207 ms         3.05 ms            1
+get_returns_by_tickers_start_end_date/iterations:1/repeats:10                         206 ms         2.86 ms            1
+get_returns_by_tickers_start_end_date/iterations:1/repeats:10                         208 ms         2.89 ms            1
+get_returns_by_tickers_start_end_date/iterations:1/repeats:10                         206 ms         3.58 ms            1
+get_returns_by_tickers_start_end_date/iterations:1/repeats:10_mean                    207 ms         3.00 ms           10
+get_returns_by_tickers_start_end_date/iterations:1/repeats:10_median                  207 ms         2.94 ms           10
+get_returns_by_tickers_start_end_date/iterations:1/repeats:10_stddev                 1.22 ms        0.223 ms           10
+get_returns_by_tickers_start_end_date/iterations:1/repeats:10_cv                     0.59 %          7.44 %            10
+get_returns_by_tickers_query_date/iterations:1/repeats:10                            89.9 ms         1.63 ms            1
+get_returns_by_tickers_query_date/iterations:1/repeats:10                            89.4 ms         1.30 ms            1
+get_returns_by_tickers_query_date/iterations:1/repeats:10                            89.1 ms         1.40 ms            1
+get_returns_by_tickers_query_date/iterations:1/repeats:10                            90.5 ms         1.35 ms            1
+get_returns_by_tickers_query_date/iterations:1/repeats:10                            97.7 ms         1.37 ms            1
+get_returns_by_tickers_query_date/iterations:1/repeats:10                            92.3 ms         1.38 ms            1
+get_returns_by_tickers_query_date/iterations:1/repeats:10                            90.3 ms         1.23 ms            1
+get_returns_by_tickers_query_date/iterations:1/repeats:10                            93.5 ms         1.40 ms            1
+get_returns_by_tickers_query_date/iterations:1/repeats:10                            90.7 ms         1.34 ms            1
+get_returns_by_tickers_query_date/iterations:1/repeats:10                            93.8 ms         1.47 ms            1
+get_returns_by_tickers_query_date/iterations:1/repeats:10_mean                       91.7 ms         1.39 ms           10
+get_returns_by_tickers_query_date/iterations:1/repeats:10_median                     90.6 ms         1.37 ms           10
+get_returns_by_tickers_query_date/iterations:1/repeats:10_stddev                     2.67 ms        0.106 ms           10
+get_returns_by_tickers_query_date/iterations:1/repeats:10_cv                         2.91 %          7.61 %            10
+get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10              1684 ms         14.0 ms            1
+get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10              1658 ms         7.45 ms            1
+get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10              1648 ms         8.00 ms            1
+get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10              1651 ms         7.73 ms            1
+get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10              1654 ms         8.67 ms            1
+get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10              1683 ms         7.89 ms            1
+get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10              1698 ms         8.05 ms            1
+get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10              1786 ms         7.83 ms            1
+get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10              1749 ms         8.67 ms            1
+get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10              1720 ms         8.59 ms            1
+get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10_mean         1693 ms         8.69 ms           10
+get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10_median       1684 ms         8.03 ms           10
+get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10_stddev       46.1 ms         1.91 ms           10
+get_returns_by_tickers_start_end_date_load_test/iterations:1/repeats:10_cv           2.72 %         21.99 %            10

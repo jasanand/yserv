@@ -4,6 +4,14 @@ from multiprocessing import Pool
 
 YSERV_URL = 'http://127.0.0.1:8000'
 
+@benchmark.register(name='get_tickers')
+@benchmark.option.iterations(1)
+@benchmark.option.repetitions(10)
+@benchmark.option.unit(benchmark.kMillisecond)
+def benchmark_get_returns_by_ticker(state):
+    while state:
+        response = requests.get(f'{YSERV_URL}/tickers')
+
 @benchmark.register(name='get_returns_by_ticker_start_end_date')
 @benchmark.option.iterations(1)
 @benchmark.option.repetitions(10)
