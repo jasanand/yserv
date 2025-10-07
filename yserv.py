@@ -29,19 +29,13 @@ async def get_tickers():
         raise HTTPException(status_code=404, detail="No Tickers found")
     return Response(tickers.to_json(orient='records'), media_type='application/json')
 
-async def _get_returns_by_ticker(ticker, start_date, end_date, include_ric=False):
-    years = np.arange(start_date.year, end_date.year+1, 1)
-    if len(years) == 0:
-        years = [start_date.year]
+@alru_cache(maxsize=64)
+async def _get_cached_returns_by_ticker(ticker):
+    path = Path(os.path.join(DB_DIR, f'{ticker}'))
 
-    file_paths = []
-    for year in years:
-        file_path = os.path.join(DB_DIR, f'{ticker}', f'{year}.parquet')
-        if os.path.exists(file_path):
-            file_paths.append(file_path)
+    file_paths = np.sort([p for p in path.glob("*")])
 
-    sel = [("date",">=",start_date), ("date","<=",end_date)]
-    eod_data = pd.concat([pd.read_parquet(file_path, columns=['close_px','adj_factor'], filters=sel)
+    eod_data = pd.concat([pd.read_parquet(file_path, columns=['close_px','adj_factor'])
                          for file_path in file_paths], sort=False, copy=False)
 
     if eod_data.empty:
@@ -54,11 +48,30 @@ async def _get_returns_by_ticker(ticker, start_date, end_date, include_ric=False
 
     # incase only return is required
     eod_data['c2c_ret'] = (eod_data['close_px'].ffill() / (eod_data['close_px'].multiply(eod_data['adj_factor'], axis='rows')).ffill().shift(1)) - 1.0
-
     eod_data.fillna(value={'c2c_ret':0.0},inplace=True)
+
+    return eod_data
+
+async def _get_returns_by_ticker(ticker, start_date, end_date, include_ric=False):
+    db_tickers = await _get_tickers()
+    if db_tickers.empty:
+        raise HTTPException(status_code=404, detail="No Tickers found")
+
+    if not ticker in db_tickers.values:
+        raise HTTPException(status_code=404, detail=f"Ticker: {ticker} not found")
+
+    eod_data = await _get_cached_returns_by_ticker(ticker)
+
+    if eod_data.empty:
+        raise HTTPException(status_code=404, detail="No Ticker/Dates found")
+
+    eod_data = eod_data.loc[(eod_data.index.date >= start_date.date()) & (eod_data.index.date <= end_date.date()),:]
+
+    if eod_data.empty:
+        raise HTTPException(status_code=404, detail="No Ticker/Dates found")
+
     if include_ric:
-        eod_data.rename(columns={'c2c_ret':ticker}, inplace=True)
-        return eod_data[[ticker]]
+        return eod_data[['c2c_ret']].rename(columns={'c2c_ret':ticker})
     else:
         return eod_data[['c2c_ret']]
 
