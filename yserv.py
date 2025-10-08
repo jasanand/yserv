@@ -92,7 +92,7 @@ async def _get_returns_by_tickers(tickers, start_date, end_date):
     if not end_date:
         raise HTTPException(status_code=404, detail="Invalid End Date")
     if end_date < start_date:
-        raise HTTPException(status_code=404, detail="End Date > Start Date")
+        raise HTTPException(status_code=404, detail="End Date < Start Date")
 
     eod_data = pd.concat([await _get_returns_by_ticker(ticker, start_date, end_date, include_ric=len(tickers)>1)
                          for ticker in tickers], sort=False, copy=False, axis=1)
