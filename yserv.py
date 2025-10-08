@@ -1,4 +1,5 @@
 import click
+from gunicorn.app.base import BaseApplication
 from fastapi import FastAPI, Depends, HTTPException, Response
 from fastapi.middleware.gzip import GZipMiddleware
 from datetime import date
@@ -133,8 +134,31 @@ async def get_returns_by_date(query_date, tickers):
               help='port')
 def main(host, port):
     """yfinance rest service"""
-    import uvicorn
-    uvicorn.run(app, host=host, port=port)
+    #import uvicorn
+    #uvicorn.run(app, host=host, port=port)
+    
+    from gunicorn.app.base import BaseApplication
+    from uvicorn.workers import UvicornWorker
+    class Gunicorn(BaseApplication):
+        def __init__(self, app, options=None):
+            self.app = app
+            self.options = options
+            super().__init__()
+
+        def load_config(self):
+            for key, value in self.options.items():
+                if key in self.cfg.settings and value is not None:
+                    self.cfg.set(key.lower(), value)
+
+        def load(self):
+            return self.app
+
+    options = {'bind': f'{host}:{port}',
+               'workers': 8,
+               'worker_class': UvicornWorker}
+
+    Gunicorn(app, options).run()
+
 
 if __name__ == "__main__":
     main()
