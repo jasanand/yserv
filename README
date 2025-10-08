@@ -8,10 +8,10 @@ Utilities:
            and saves individual tickers as parquet (compression=gzip)
            files split by year. 
 
-2. yserv:  runs a rest service using fast-api package and provides
+2. yserv:  runs a rest service using gunicorn[uvicorn[fast-api]] and provides
            the following end-points:
            a. tickers/: 
-                       returns currently saved tickers
+                       get currently saved tickers
            b. returns/{tickers}/{start_date}/{end_date}: 
                        get returns for ticker/s based on 
                        start/end dates
