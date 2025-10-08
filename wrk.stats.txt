@@ -1,0 +1,13 @@
+Running 1m test @ http://127.0.0.1:8000/returns/NVDA,MSFT,AAPL,GOOG,AMZN,META,AVGO,TSLA,JPM,WMT,ORCL,LLY,V,MA,NFLX,XOM,JNJ,ABBV,PLTR,COST,HD,BAC,PG/20230101/20251003
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    66.85ms   22.83ms 200.37ms   79.10%
+    Req/Sec    15.37      5.71    40.00     92.10%
+  Latency Distribution
+     50%   61.62ms
+     75%   64.42ms
+     90%  113.94ms
+     99%  132.16ms
+  7193 requests in 1.00m, 1.64GB read
+Requests/sec:    119.68
+Transfer/sec:     27.91MB
