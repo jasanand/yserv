@@ -19,9 +19,11 @@ async def upsert(tickers, eod_data):
         if ric in eod_data.columns.get_level_values(0):
             data = eod_data[ric]
             # derive the adjustment factor
-            adjs = eod_data[(ric, 'adj_factor')].ffill()/eod_data[(ric, 'close_px')].ffill()
-            eod_data[(ric, 'adj_factor')] = (adjs[::-1]/adjs[::-1].shift(1).fillna(1.0))[::-1]
             for year, data in eod_data[ric].groupby(eod_data.index.year):
+                # excluded nans
+                data = data.loc[np.isfinite(data['close_px'])]
+                adjs = data['adj_factor'].ffill()/data['close_px'].ffill()
+                data['adj_factor'] = (adjs[::-1]/adjs[::-1].shift(1).fillna(1.0))[::-1]
                 # a tab on how much data is being updated
                 data_len = len(data)
                 dir_path = os.path.join(DB_DIR, f'{ric}')
@@ -56,15 +58,17 @@ async def upsert(tickers, eod_data):
                     # this can be based on either percentage change
                     # or some std away from a rolling average
                     roll_adj_cum_prod = data_['adj_factor'][::-1].cumprod()[::-1]
-                    data_['adj_close_px'] = data_['close_px'].multiply(roll_adj_cum_prod, axis='rows')
-                    data_['c2c_ret'] = ((data_['adj_close_px'].ffill() / data_['adj_close_px'].ffill().shift(1)) - 1.0)*100.0
+                    adj_close_px = data_['close_px'].multiply(roll_adj_cum_prod, axis='rows')
+                    adj_close_px.name = 'adj_close_px'
+                    c2c_ret = ((adj_close_px.ffill() / adj_close_px.ffill().shift(1)) - 1.0)*100.0
+                    c2c_ret.name = 'c2c_ret'
                     # rolling mean of 5 days
-                    mu = data_['adj_close_px'].shift(1).rolling(5).mean()
-                    sd = data_['adj_close_px'].shift(1).rolling(5).std()
+                    mu = adj_close_px.shift(1).rolling(5).mean()
+                    sd = adj_close_px.shift(1).rolling(5).std()
                     min_level = mu - 5 * sd # < 5 std
                     max_level = mu + 5 * sd # > 5 std
-                    check_max = data_['adj_close_px'] > max_level 
-                    check_min = data_['adj_close_px'] < min_level 
+                    check_max = adj_close_px > max_level 
+                    check_min = adj_close_px < min_level 
                     # to show the previous entry to the outlier
                     check_max = check_max | check_max.shift(-1)
                     check_min = check_min | check_min.shift(-1)
@@ -75,10 +79,11 @@ async def upsert(tickers, eod_data):
                     check_min.iloc[:-data_len] = False
                     if np.any(check_max):
                         logger.warning(f'Detected outliers for {ric} > +5 std (based on 5 day rolling mean), please check!')
-                        logger.warning(f"\n{data_.loc[check_max,['close_px','adj_close_px','c2c_ret']]}")
+                        logger.warning(f"\n{pd.concat((data_['close_px'],adj_close_px,c2c_ret),axis=1)[check_max]}")
                     if np.any(check_min):
                         logger.warning(f'Detected outliers for {ric} < -5 std (based on 5 day rolling mean), please check!')
-                        logger.warning(f"\n{data_.loc[check_min,['close_px','adj_close_px','c2c_ret']]}")
+                        #logger.warning(f"\n{data_.loc[check_min,['close_px','c2c_ret']]}")
+                        logger.warning(f"\n{pd.concat((data_['close_px'],adj_close_px,c2c_ret),axis=1)[check_min]}")
 
                 # write to parquet file
                 data.to_parquet(file_path, index=True, compression='gzip')
