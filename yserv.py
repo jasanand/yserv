@@ -53,7 +53,6 @@ async def _get_cached_returns_by_ticker(ticker):
 
     return eod_data
 
-#@alru_cache(maxsize=64)
 async def _get_returns_by_ticker(ticker, start_date, end_date, include_ric=False):
     db_tickers = await _get_tickers()
     if db_tickers.empty:
