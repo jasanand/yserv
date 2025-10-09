@@ -22,6 +22,12 @@ async def upsert(tickers, eod_data):
             for year, data in eod_data[ric].groupby(eod_data.index.year):
                 # excluded nans
                 data = data.loc[np.isfinite(data['close_px'])]
+                # note: there is no point in saving adj_close_px as its backward
+                # adjusted so purely depends on the start and end date window 
+                # requested by the client, we can potentially save c2c_ret but
+                # its a straight forward calculation which can be done on the fly
+                # in the service api, so we just calculate the adj_factor applicable
+                # on the day t and save it along with ohlc and volume
                 adjs = data['adj_factor'].ffill()/data['close_px'].ffill()
                 data['adj_factor'] = (adjs[::-1]/adjs[::-1].shift(1).fillna(1.0))[::-1]
                 # a tab on how much data is being updated
