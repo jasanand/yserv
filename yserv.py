@@ -53,6 +53,7 @@ async def _get_cached_returns_by_ticker(ticker):
 
     return eod_data
 
+#@alru_cache(maxsize=64)
 async def _get_returns_by_ticker(ticker, start_date, end_date, include_ric=False):
     db_tickers = await _get_tickers()
     if db_tickers.empty:
@@ -66,7 +67,8 @@ async def _get_returns_by_ticker(ticker, start_date, end_date, include_ric=False
     if eod_data.empty:
         raise HTTPException(status_code=404, detail="No Ticker/Dates found")
 
-    eod_data = eod_data.loc[(eod_data.index.date >= start_date.date()) & (eod_data.index.date <= end_date.date()),:]
+    #eod_data = eod_data.loc[(eod_data.index.date >= start_date.date()) & (eod_data.index.date <= end_date.date()),:]
+    eod_data = eod_data.loc[start_date:end_date]
 
     if eod_data.empty:
         raise HTTPException(status_code=404, detail="No Ticker/Dates found")
