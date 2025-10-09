@@ -1,4 +1,4 @@
-2025-10-08T22:02:38+01:00
+2025-10-09T16:39:59+01:00
 Running benchmark.py
 Run on (8 X 1992.01 MHz CPU s)
 CPU Caches:
@@ -6,134 +6,134 @@ CPU Caches:
   L1 Instruction 32 KiB (x4)
   L2 Unified 256 KiB (x4)
   L3 Unified 8192 KiB (x1)
-Load Average: 0.25, 0.14, 0.06
+Load Average: 3.08, 2.23, 1.34
 ***WARNING*** ASLR is enabled, the results may have unreproducible noise in them.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 Benchmark                                                                                                   Time             CPU   Iterations
 ---------------------------------------------------------------------------------------------------------------------------------------------
-[url: /tickers] /iterations:1/repeats:10                                                                 4.09 ms         2.88 ms            1
-[url: /tickers] /iterations:1/repeats:10                                                                 2.43 ms         1.55 ms            1
-[url: /tickers] /iterations:1/repeats:10                                                                 2.18 ms         1.30 ms            1
-[url: /tickers] /iterations:1/repeats:10                                                                 2.13 ms         1.30 ms            1
-[url: /tickers] /iterations:1/repeats:10                                                                 2.14 ms         1.31 ms            1
-[url: /tickers] /iterations:1/repeats:10                                                                 2.20 ms         1.39 ms            1
-[url: /tickers] /iterations:1/repeats:10                                                                 2.17 ms         1.28 ms            1
-[url: /tickers] /iterations:1/repeats:10                                                                 2.53 ms         1.54 ms            1
-[url: /tickers] /iterations:1/repeats:10                                                                 2.50 ms         1.53 ms            1
-[url: /tickers] /iterations:1/repeats:10                                                                 2.30 ms         1.49 ms            1
-[url: /tickers] /iterations:1/repeats:10_mean                                                            2.47 ms         1.56 ms           10
-[url: /tickers] /iterations:1/repeats:10_median                                                          2.25 ms         1.44 ms           10
-[url: /tickers] /iterations:1/repeats:10_stddev                                                         0.591 ms        0.477 ms           10
-[url: /tickers] /iterations:1/repeats:10_cv                                                             23.94 %         30.62 %            10
-[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10                                      4.68 ms         1.20 ms            1
-[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10                                      4.61 ms         1.06 ms            1
-[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10                                      4.58 ms         1.14 ms            1
-[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10                                      4.33 ms         1.06 ms            1
-[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10                                      4.49 ms         1.13 ms            1
-[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10                                      4.63 ms         1.18 ms            1
-[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10                                      4.48 ms         1.07 ms            1
-[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10                                      4.24 ms        0.993 ms            1
-[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10                                      4.46 ms         1.05 ms            1
-[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10                                      4.42 ms         1.02 ms            1
-[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10_mean                                 4.49 ms         1.09 ms           10
-[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10_median                               4.48 ms         1.07 ms           10
-[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10_stddev                              0.139 ms        0.067 ms           10
-[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10_cv                                   3.09 %          6.15 %            10
-[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10                       3.52 ms         1.22 ms            1
-[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10                       2.85 ms        0.998 ms            1
-[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10                       3.31 ms         1.05 ms            1
-[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10                       3.69 ms         1.08 ms            1
-[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10                       3.24 ms         1.12 ms            1
-[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10                       3.02 ms         1.02 ms            1
-[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10                       2.98 ms         1.05 ms            1
-[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10                       3.24 ms         1.05 ms            1
-[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10                       3.40 ms         1.25 ms            1
-[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10                       3.59 ms         1.08 ms            1
-[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10_mean                  3.28 ms         1.09 ms           10
-[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10_median                3.28 ms         1.07 ms           10
-[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10_stddev               0.275 ms        0.082 ms           10
-[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10_cv                    8.36 %          7.53 %            10
-[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10                                     41.5 ms         2.86 ms            1
-[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10                                     40.4 ms         2.45 ms            1
-[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10                                     40.5 ms         2.38 ms            1
-[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10                                     40.4 ms         2.41 ms            1
-[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10                                     40.9 ms         2.58 ms            1
-[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10                                     41.9 ms         2.41 ms            1
-[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10                                     41.9 ms         2.87 ms            1
-[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10                                     41.1 ms         2.48 ms            1
-[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10                                     40.2 ms         2.36 ms            1
-[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10                                     40.2 ms         2.37 ms            1
-[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10_mean                                40.9 ms         2.52 ms           10
-[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10_median                              40.7 ms         2.43 ms           10
-[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10_stddev                             0.690 ms        0.194 ms           10
-[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10_cv                                  1.69 %          7.70 %            10
-[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10                        3.77 ms         1.45 ms            1
-[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10                        5.33 ms         1.27 ms            1
-[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10                        6.37 ms         1.35 ms            1
-[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10                        6.05 ms         1.41 ms            1
-[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10                        8.71 ms         1.79 ms            1
-[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10                        7.07 ms         1.49 ms            1
-[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10                        9.19 ms         1.59 ms            1
-[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10                        10.0 ms         1.48 ms            1
-[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10                        11.7 ms         1.41 ms            1
-[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10                        5.73 ms         1.41 ms            1
-[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10_mean                   7.40 ms         1.47 ms           10
-[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10_median                 6.72 ms         1.43 ms           10
-[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10_stddev                 2.45 ms        0.142 ms           10
-[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10_cv                    33.13 %          9.67 %            10
-[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10                           234 ms         23.2 ms            1
-[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10                           198 ms         14.5 ms            1
-[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10                           185 ms         14.1 ms            1
-[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10                           124 ms         15.3 ms            1
-[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10                           125 ms         14.0 ms            1
-[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10                           128 ms         14.2 ms            1
-[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10                           234 ms         14.8 ms            1
-[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10                           134 ms         14.7 ms            1
-[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10                           162 ms         15.4 ms            1
-[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10                           144 ms         15.4 ms            1
-[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10_mean                      167 ms         15.6 ms           10
-[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10_median                    153 ms         14.7 ms           10
-[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10_stddev                   43.5 ms         2.73 ms           10
-[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10_cv                      26.09 %         17.52 %            10
-[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10               118 ms         14.8 ms            1
-[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10              67.7 ms         14.1 ms            1
-[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10              65.2 ms         14.1 ms            1
-[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10              66.4 ms         14.3 ms            1
-[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10              75.2 ms         14.4 ms            1
-[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10              80.2 ms         14.1 ms            1
-[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10               109 ms         13.9 ms            1
-[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10              93.1 ms         14.7 ms            1
-[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10              84.5 ms         15.3 ms            1
-[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10              81.7 ms         14.2 ms            1
-[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10_mean         84.2 ms         14.4 ms           10
-[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10_median       81.0 ms         14.3 ms           10
-[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10_stddev       18.0 ms        0.429 ms           10
-[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10_cv          21.37 %          2.97 %            10
-[url: /returns/query_date/tickers] /iterations:1/repeats:10                                              23.0 ms         1.82 ms            1
-[url: /returns/query_date/tickers] /iterations:1/repeats:10                                              22.7 ms         1.25 ms            1
-[url: /returns/query_date/tickers] /iterations:1/repeats:10                                              22.2 ms         1.21 ms            1
-[url: /returns/query_date/tickers] /iterations:1/repeats:10                                              22.4 ms         1.30 ms            1
-[url: /returns/query_date/tickers] /iterations:1/repeats:10                                              23.5 ms         1.40 ms            1
-[url: /returns/query_date/tickers] /iterations:1/repeats:10                                              22.3 ms         1.30 ms            1
-[url: /returns/query_date/tickers] /iterations:1/repeats:10                                              21.7 ms         1.29 ms            1
-[url: /returns/query_date/tickers] /iterations:1/repeats:10                                              23.0 ms         1.34 ms            1
-[url: /returns/query_date/tickers] /iterations:1/repeats:10                                              22.5 ms         1.29 ms            1
-[url: /returns/query_date/tickers] /iterations:1/repeats:10                                              22.5 ms         1.26 ms            1
-[url: /returns/query_date/tickers] /iterations:1/repeats:10_mean                                         22.6 ms         1.35 ms           10
-[url: /returns/query_date/tickers] /iterations:1/repeats:10_median                                       22.5 ms         1.29 ms           10
-[url: /returns/query_date/tickers] /iterations:1/repeats:10_stddev                                      0.501 ms        0.176 ms           10
-[url: /returns/query_date/tickers] /iterations:1/repeats:10_cv                                           2.22 %         13.06 %            10
-[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10                                 15.1 ms         1.54 ms            1
-[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10                                 9.42 ms         1.42 ms            1
-[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10                                 4.31 ms         1.23 ms            1
-[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10                                 5.26 ms         1.17 ms            1
-[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10                                 12.0 ms         1.51 ms            1
-[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10                                 11.8 ms         1.38 ms            1
-[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10                                 5.43 ms         1.27 ms            1
-[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10                                 10.2 ms         1.21 ms            1
-[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10                                 10.3 ms         1.27 ms            1
-[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10                                 11.2 ms         1.30 ms            1
-[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10_mean                            9.50 ms         1.33 ms           10
-[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10_median                          10.3 ms         1.29 ms           10
-[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10_stddev                          3.47 ms        0.126 ms           10
-[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10_cv                             36.52 %          9.49 %            10
+[url: /tickers] /iterations:1/repeats:10                                                                 4.49 ms         3.08 ms            1
+[url: /tickers] /iterations:1/repeats:10                                                                 2.78 ms         1.82 ms            1
+[url: /tickers] /iterations:1/repeats:10                                                                 2.47 ms         1.57 ms            1
+[url: /tickers] /iterations:1/repeats:10                                                                 2.26 ms         1.43 ms            1
+[url: /tickers] /iterations:1/repeats:10                                                                 2.24 ms         1.41 ms            1
+[url: /tickers] /iterations:1/repeats:10                                                                 2.24 ms         1.44 ms            1
+[url: /tickers] /iterations:1/repeats:10                                                                 2.23 ms         1.42 ms            1
+[url: /tickers] /iterations:1/repeats:10                                                                 2.18 ms         1.34 ms            1
+[url: /tickers] /iterations:1/repeats:10                                                                 2.13 ms         1.28 ms            1
+[url: /tickers] /iterations:1/repeats:10                                                                 2.42 ms         1.60 ms            1
+[url: /tickers] /iterations:1/repeats:10_mean                                                            2.54 ms         1.64 ms           10
+[url: /tickers] /iterations:1/repeats:10_median                                                          2.25 ms         1.43 ms           10
+[url: /tickers] /iterations:1/repeats:10_stddev                                                         0.709 ms        0.529 ms           10
+[url: /tickers] /iterations:1/repeats:10_cv                                                             27.88 %         32.27 %            10
+[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10                                      4.66 ms         1.18 ms            1
+[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10                                      4.26 ms         1.09 ms            1
+[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10                                      4.16 ms         1.04 ms            1
+[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10                                      4.72 ms         1.13 ms            1
+[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10                                      4.69 ms         1.29 ms            1
+[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10                                      4.27 ms         1.08 ms            1
+[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10                                      4.15 ms         1.05 ms            1
+[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10                                      4.42 ms         1.27 ms            1
+[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10                                      4.16 ms         1.04 ms            1
+[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10                                      4.13 ms         1.02 ms            1
+[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10_mean                                 4.36 ms         1.12 ms           10
+[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10_median                               4.26 ms         1.09 ms           10
+[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10_stddev                              0.243 ms        0.098 ms           10
+[url: /returns/ticker/start_date/end_date] /iterations:1/repeats:10_cv                                   5.56 %          8.74 %            10
+[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10                       3.74 ms         1.26 ms            1
+[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10                       2.92 ms         1.17 ms            1
+[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10                       4.06 ms         1.24 ms            1
+[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10                       3.95 ms         1.20 ms            1
+[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10                       3.10 ms         1.17 ms            1
+[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10                       3.22 ms         1.22 ms            1
+[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10                       2.94 ms         1.17 ms            1
+[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10                       2.88 ms         1.10 ms            1
+[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10                       2.96 ms         1.05 ms            1
+[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10                       3.50 ms         1.24 ms            1
+[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10_mean                  3.33 ms         1.18 ms           10
+[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10_median                3.16 ms         1.19 ms           10
+[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10_stddev               0.452 ms        0.066 ms           10
+[url: /returns/ticker/start_date/end_date][random params] /iterations:1/repeats:10_cv                   13.59 %          5.62 %            10
+[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10                                     37.1 ms         3.12 ms            1
+[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10                                     35.5 ms         2.41 ms            1
+[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10                                     39.6 ms         2.72 ms            1
+[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10                                     34.9 ms         2.47 ms            1
+[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10                                     34.8 ms         2.51 ms            1
+[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10                                     34.9 ms         2.46 ms            1
+[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10                                     35.2 ms         2.56 ms            1
+[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10                                     35.2 ms         2.55 ms            1
+[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10                                     34.7 ms         2.57 ms            1
+[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10                                     34.7 ms         2.51 ms            1
+[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10_mean                                35.7 ms         2.59 ms           10
+[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10_median                              35.0 ms         2.53 ms           10
+[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10_stddev                              1.54 ms        0.205 ms           10
+[url: /returns/tickers/start_date/end_date] /iterations:1/repeats:10_cv                                  4.32 %          7.91 %            10
+[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10                        3.69 ms         1.45 ms            1
+[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10                        5.19 ms         1.42 ms            1
+[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10                        5.32 ms         1.34 ms            1
+[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10                        5.36 ms         1.44 ms            1
+[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10                        7.07 ms         1.53 ms            1
+[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10                        5.60 ms         1.40 ms            1
+[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10                        7.65 ms         1.54 ms            1
+[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10                        7.98 ms         1.59 ms            1
+[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10                        9.20 ms         1.46 ms            1
+[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10                        4.52 ms         1.31 ms            1
+[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10_mean                   6.16 ms         1.45 ms           10
+[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10_median                 5.48 ms         1.45 ms           10
+[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10_stddev                 1.73 ms        0.089 ms           10
+[url: /returns/tickers/start_date/end_date][random args] /iterations:1/repeats:10_cv                    28.12 %          6.18 %            10
+[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10                           143 ms         22.3 ms            1
+[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10                           139 ms         15.7 ms            1
+[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10                           129 ms         14.6 ms            1
+[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10                           110 ms         14.8 ms            1
+[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10                           150 ms         14.7 ms            1
+[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10                           322 ms         15.1 ms            1
+[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10                           195 ms         14.4 ms            1
+[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10                           137 ms         14.8 ms            1
+[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10                           131 ms         14.5 ms            1
+[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10                           130 ms         14.3 ms            1
+[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10_mean                      159 ms         15.5 ms           10
+[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10_median                    138 ms         14.7 ms           10
+[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10_stddev                   61.5 ms         2.43 ms           10
+[url: /returns/tickers/start_date/end_date][load test] /iterations:1/repeats:10_cv                      38.73 %         15.63 %            10
+[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10              98.0 ms         13.8 ms            1
+[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10              57.5 ms         14.2 ms            1
+[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10              56.6 ms         13.9 ms            1
+[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10               109 ms         14.2 ms            1
+[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10              76.6 ms         14.2 ms            1
+[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10              87.3 ms         14.4 ms            1
+[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10              78.2 ms         14.0 ms            1
+[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10              77.5 ms         14.5 ms            1
+[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10              63.5 ms         14.2 ms            1
+[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10              56.7 ms         14.3 ms            1
+[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10_mean         76.1 ms         14.2 ms           10
+[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10_median       77.1 ms         14.2 ms           10
+[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10_stddev       18.1 ms        0.220 ms           10
+[url: /returns/tickers/start_date/end_date][random args/load test] /iterations:1/repeats:10_cv          23.84 %          1.55 %            10
+[url: /returns/query_date/tickers] /iterations:1/repeats:10                                              18.6 ms         1.84 ms            1
+[url: /returns/query_date/tickers] /iterations:1/repeats:10                                              17.3 ms         1.33 ms            1
+[url: /returns/query_date/tickers] /iterations:1/repeats:10                                              16.0 ms         1.29 ms            1
+[url: /returns/query_date/tickers] /iterations:1/repeats:10                                              15.8 ms         1.24 ms            1
+[url: /returns/query_date/tickers] /iterations:1/repeats:10                                              16.7 ms         1.27 ms            1
+[url: /returns/query_date/tickers] /iterations:1/repeats:10                                              15.8 ms         1.17 ms            1
+[url: /returns/query_date/tickers] /iterations:1/repeats:10                                              15.9 ms         1.20 ms            1
+[url: /returns/query_date/tickers] /iterations:1/repeats:10                                              15.9 ms         1.28 ms            1
+[url: /returns/query_date/tickers] /iterations:1/repeats:10                                              16.7 ms         1.31 ms            1
+[url: /returns/query_date/tickers] /iterations:1/repeats:10                                              16.1 ms         1.20 ms            1
+[url: /returns/query_date/tickers] /iterations:1/repeats:10_mean                                         16.5 ms         1.31 ms           10
+[url: /returns/query_date/tickers] /iterations:1/repeats:10_median                                       16.0 ms         1.27 ms           10
+[url: /returns/query_date/tickers] /iterations:1/repeats:10_stddev                                      0.900 ms        0.193 ms           10
+[url: /returns/query_date/tickers] /iterations:1/repeats:10_cv                                           5.47 %         14.69 %            10
+[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10                                 11.0 ms         1.49 ms            1
+[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10                                 7.45 ms         1.35 ms            1
+[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10                                 4.37 ms         1.44 ms            1
+[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10                                 4.85 ms         1.42 ms            1
+[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10                                 8.97 ms         1.23 ms            1
+[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10                                 9.30 ms         1.30 ms            1
+[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10                                 4.63 ms         1.29 ms            1
+[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10                                 8.43 ms         1.51 ms            1
+[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10                                 8.17 ms         1.27 ms            1
+[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10                                 8.84 ms         1.30 ms            1
+[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10_mean                            7.60 ms         1.36 ms           10
+[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10_median                          8.30 ms         1.32 ms           10
+[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10_stddev                          2.25 ms        0.096 ms           10
+[url: /returns/query_date/tickers][random args] /iterations:1/repeats:10_cv                             29.65 %          7.10 %            10
