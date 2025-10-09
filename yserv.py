@@ -11,6 +11,7 @@ import os
 import pandas as pd
 import numpy as np
 from async_lru import alru_cache
+from pydantic import BaseModel, field_validator
 
 app = FastAPI()
 app.add_middleware(GZipMiddleware, minimum_size=1000)
@@ -85,13 +86,6 @@ async def _get_returns_by_tickers(tickers, start_date, end_date):
     if np.any(missing):
         raise HTTPException(status_code=404, detail=f"Tickers: {tickers[missing]} not found")
     
-    # get years between start and end date
-    start_date = parse_date(start_date)
-    if not start_date:
-        raise HTTPException(status_code=404, detail="Invalid Start Date")
-    end_date = parse_date(end_date)
-    if not end_date:
-        raise HTTPException(status_code=404, detail="Invalid End Date")
     if end_date < start_date:
         raise HTTPException(status_code=404, detail="End Date < Start Date")
 
@@ -103,21 +97,39 @@ async def _get_returns_by_tickers(tickers, start_date, end_date):
 
     return eod_data
 
-@app.get("/returns/{tickers}/{start_date}/{end_date}")
-async def get_returns_by_tickers(tickers, start_date, end_date):
-    eod_data = await _get_returns_by_tickers(tickers, start_date, end_date)
+class Params1(BaseModel):
+    tickers : str
+    start_date: str
+    end_date: str
 
+    # parse start_date, end_date as valid dates
+    @field_validator('start_date','end_date')
+    def validate_dates(cls, value, field):
+        datetime_parsed = parse_date(value)
+        if not datetime_parsed:
+            raise HTTPException(status_code=404, detail=f'Invalid Date for {field}')
+        return datetime_parsed
+    
+@app.get("/returns/{tickers}/{start_date}/{end_date}")
+async def get_returns_by_tickers(params: Params1 = Depends()):
+    eod_data = await _get_returns_by_tickers(params.tickers, params.start_date, params.end_date)
     return Response(eod_data.reset_index().to_json(orient='records',date_format='iso'), media_type='application/json')
 
+class Params2(BaseModel):
+    query_date: str
+    tickers : str
+
+    # parse query_date as valid date
+    @field_validator('query_date')
+    def validate_dates(cls, value, field):
+        datetime_parsed = parse_date(value)
+        if not datetime_parsed:
+            raise HTTPException(status_code=404, detail=f'Invalid Date for {field}')
+        return datetime_parsed
+
 @app.get("/returns/{query_date}/{tickers}")
-async def get_returns_by_date(query_date, tickers):
-    # get year 
-    query_date = parse_date(query_date)
-    if not query_date:
-        raise HTTPException(status_code=404, detail="Invalid Query Date")
-
-    eod_data = await _get_returns_by_tickers(tickers, str(query_date), str(query_date))
-
+async def get_returns_by_date(params: Params2 = Depends()):
+    eod_data = await _get_returns_by_tickers(params.tickers, params.query_date, params.query_date)
     return Response(eod_data.reset_index().to_json(orient='records',date_format='iso'), media_type='application/json')
 
 @click.command()
