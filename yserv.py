@@ -107,7 +107,7 @@ class Params1(BaseModel):
     def validate_dates(cls, value, field):
         datetime_parsed = parse_date(value)
         if not datetime_parsed:
-            raise HTTPException(status_code=404, detail=f'Invalid Date for {field}')
+            raise HTTPException(status_code=404, detail=f'Invalid value: {value} for field: {field.field_name}')
         return datetime_parsed
     
 @app.get("/returns/{tickers}/{start_date}/{end_date}")
@@ -124,7 +124,7 @@ class Params2(BaseModel):
     def validate_dates(cls, value, field):
         datetime_parsed = parse_date(value)
         if not datetime_parsed:
-            raise HTTPException(status_code=404, detail=f'Invalid Date for {field}')
+            raise HTTPException(status_code=404, detail=f'Invalid value: {value} for field: {field.field_name}')
         return datetime_parsed
 
 @app.get("/returns/{query_date}/{tickers}")
