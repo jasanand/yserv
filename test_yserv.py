@@ -26,13 +26,15 @@ def test_returns_by_date():
     #logger.info(f'\n{returns}')
 
 def test_missing_ric():
+    # will raise not found error
     response = requests.get(f'{YSERV_URL}/returns/AAPLXX/20231004/20250926')
     assert response.status_code == 404
     #logger.info(f'{response.json()}')
 
 def test_invalid_date():
+    # will raise value error
     response = requests.get(f'{YSERV_URL}/returns/AAPL/20230014/20250926')
-    assert response.status_code == 404
+    assert response.status_code == 422
     #logger.info(f'{response.json()}')
 
 if __name__ == "__main__":
