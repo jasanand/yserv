@@ -11,7 +11,8 @@ import os
 import pandas as pd
 import numpy as np
 from async_lru import alru_cache
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, AfterValidator, BeforeValidator
+from typing import Annotated
 
 app = FastAPI()
 app.add_middleware(GZipMiddleware, minimum_size=1000)
@@ -97,18 +98,20 @@ async def _get_returns_by_tickers(tickers, start_date, end_date):
 
     return eod_data
 
+def date_parser(value):
+    if isinstance(value, str):
+        parsed = parse_date(value)
+        if not parsed:
+            raise ValueError(f'Invalid date: {value}')
+        return parsed
+    return value
+
+DatetimeParam = Annotated[dt.datetime, BeforeValidator(date_parser)]
+
 class Params1(BaseModel):
     tickers : str
-    start_date: str
-    end_date: str
-
-    # parse start_date, end_date as valid dates
-    @field_validator('start_date','end_date')
-    def validate_dates(cls, value, field):
-        datetime_parsed = parse_date(value)
-        if not datetime_parsed:
-            raise HTTPException(status_code=404, detail=f'Invalid value: {value} for field: {field.field_name}')
-        return datetime_parsed
+    start_date: DatetimeParam
+    end_date: DatetimeParam
     
 @app.get("/returns/{tickers}/{start_date}/{end_date}")
 async def get_returns_by_tickers(params: Params1 = Depends()):
@@ -116,16 +119,8 @@ async def get_returns_by_tickers(params: Params1 = Depends()):
     return Response(eod_data.reset_index().to_json(orient='records',date_format='iso'), media_type='application/json')
 
 class Params2(BaseModel):
-    query_date: str
+    query_date: DatetimeParam
     tickers : str
-
-    # parse query_date as valid date
-    @field_validator('query_date')
-    def validate_dates(cls, value, field):
-        datetime_parsed = parse_date(value)
-        if not datetime_parsed:
-            raise HTTPException(status_code=404, detail=f'Invalid value: {value} for field: {field.field_name}')
-        return datetime_parsed
 
 @app.get("/returns/{query_date}/{tickers}")
 async def get_returns_by_date(params: Params2 = Depends()):
@@ -171,7 +166,6 @@ def main(host, port):
                'worker_class': UvicornWorker}
 
     Gunicorn(app, options).run()
-
 
 if __name__ == "__main__":
     main()
