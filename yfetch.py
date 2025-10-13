@@ -61,7 +61,7 @@ async def upsert(tickers, eod_data):
                         if os.path.exists(file_path):
                             sel = [("date",">=",lookback_date)]
                             lookback_data = pd.read_parquet(file_path, filters=sel)
-                            data_ = pd.concat((lookback_data, data_), sort=True)
+                            data_ = pd.concat((lookback_data, data_), sort=False).sort_index()
                 # data checks, winsorisation if any..
                 if len(data_) > 20:
                     # detect gaps
