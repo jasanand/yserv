@@ -48,7 +48,7 @@ async def upsert(tickers, eod_data):
                         sys.exit(1)
                     # ignore those dates which are there in data
                     ignored = np.isin(existing.index, data.index)
-                    data = pd.concat((existing[~ignored], data)).sort_index()
+                    data = pd.concat([existing[~ignored], data], sort=False).sort_index()
                     
                 # hold a pointer to data for checks
                 data_ = data
@@ -69,9 +69,8 @@ async def upsert(tickers, eod_data):
                     max_gap = gap_ts.max()
                     if max_gap >= 5:
                         max_gap_idx = np.argmax(gap_ts)
-                        logger.error(f'{max_gap} days gap detected for {ric}, please check!! aborting...')
+                        logger.error(f'{max_gap} days gap detected for {ric}, please check!!')
                         logger.error(f'\n{data_.iloc[max_gap_idx-1:max_gap_idx+1]}')
-                        sys.exit(1)
                     # check if there is an outlier in the data
                     # this can be based on either percentage change
                     # or some std away from a rolling average
