@@ -22,7 +22,19 @@ DB_DIR = os.path.join(os.path.dirname(__file__), "parquet")
 @alru_cache(maxsize=1)
 async def _get_tickers():
     path = Path(DB_DIR)
-    tickers = pd.Series(data=np.sort([p.name for p in path.glob("*") if p.is_dir()]))
+    tickers_arr = np.sort([p.name for p in path.glob("*") if p.is_dir()])
+    tickers = pd.DataFrame(data=[],columns=['ticker','start_date','end_date'])
+    #tickers = pd.Series(data=np.sort([p.name for p in path.glob("*") if p.is_dir()]))
+    # lets also store start and end dates for which we have the data
+    for ticker in tickers_arr:
+        path = Path(os.path.join(DB_DIR, f'{ticker}'))
+        file_paths = np.sort([p for p in path.glob("*")])
+        data = pd.read_parquet(file_paths[0], columns=['close_px'])
+        start_date = data.index.date[0]
+        data = pd.read_parquet(file_paths[-1], columns=['close_px'])
+        end_date = data.index.date[-1]
+        ticker_row = pd.DataFrame(data={'ticker':[ticker],'start_date':[start_date],'end_date':[end_date]})
+        tickers = pd.concat([tickers,ticker_row],ignore_index=True)
     return tickers
 
 @app.get("/tickers/")
@@ -30,7 +42,7 @@ async def get_tickers():
     tickers = await _get_tickers()
     if tickers.empty:
         raise HTTPException(status_code=404, detail="No Tickers found")
-    return Response(tickers.to_json(orient='records'), media_type='application/json')
+    return Response(tickers.to_json(orient='records',date_format='iso'), media_type='application/json')
 
 @alru_cache(maxsize=64)
 async def _get_cached_returns_by_ticker(ticker):
@@ -60,7 +72,7 @@ async def _get_returns_by_ticker(ticker, start_date, end_date, include_ric=False
     if db_tickers.empty:
         raise HTTPException(status_code=404, detail="No Tickers found")
 
-    if not ticker in db_tickers.values:
+    if not ticker in db_tickers['ticker'].values:
         raise HTTPException(status_code=404, detail=f"Ticker: {ticker} not found")
 
     eod_data = await _get_cached_returns_by_ticker(ticker)
@@ -83,7 +95,7 @@ async def _get_returns_by_tickers(tickers, start_date, end_date):
     if db_tickers.empty:
         raise HTTPException(status_code=404, detail="No Tickers found")
 
-    missing = ~np.isin(tickers, db_tickers)
+    missing = ~np.isin(tickers, db_tickers['ticker'].values)
     if np.any(missing):
         raise HTTPException(status_code=404, detail=f"Tickers: {tickers[missing]} not found")
     
