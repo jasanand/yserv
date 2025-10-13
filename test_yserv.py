@@ -8,7 +8,8 @@ YSERV_URL = 'http://127.0.0.1:8000'
 def test_tickers():
     response = requests.get(f'{YSERV_URL}/tickers')
     assert response.status_code == 200
-    #logger.info(response.json())
+    tickers = pd.read_json(StringIO(response_tickers.text),convert_dates=['start_date','end_date']).set_index('ticker')
+    logger.info(f'\n{tickers}')
 
 def test_returns():
     response = requests.get(f'{YSERV_URL}/returns/AAPL/20231004/20250926')
