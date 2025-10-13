@@ -23,18 +23,18 @@ DB_DIR = os.path.join(os.path.dirname(__file__), "parquet")
 async def _get_tickers():
     path = Path(DB_DIR)
     tickers_arr = np.sort([p.name for p in path.glob("*") if p.is_dir()])
-    tickers = pd.DataFrame(data=[],columns=['ticker','start_date','end_date'])
+    tickers = pd.DataFrame()
     #tickers = pd.Series(data=np.sort([p.name for p in path.glob("*") if p.is_dir()]))
     # lets also store start and end dates for which we have the data
     for ticker in tickers_arr:
         path = Path(os.path.join(DB_DIR, f'{ticker}'))
         file_paths = np.sort([p for p in path.glob("*")])
         data = pd.read_parquet(file_paths[0], columns=['close_px'])
-        start_date = data.index.date[0]
+        start_date = data.index[0]
         data = pd.read_parquet(file_paths[-1], columns=['close_px'])
-        end_date = data.index.date[-1]
+        end_date = data.index[-1]
         ticker_row = pd.DataFrame(data={'ticker':[ticker],'start_date':[start_date],'end_date':[end_date]})
-        tickers = pd.concat([tickers,ticker_row],ignore_index=True)
+        tickers = ticker_row if tickers.empty else pd.concat([tickers,ticker_row],ignore_index=True)
     return tickers
 
 @app.get("/tickers/")
