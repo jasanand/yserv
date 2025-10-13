@@ -39,9 +39,17 @@ async def upsert(tickers, eod_data):
                 # update the existing version...
                 if os.path.exists(file_path):
                     existing = pd.read_parquet(file_path)
+                    # get the last date of existing data
+                    existing_end_date = existing.index[-1].date()
+                    data_start_date = data.index[0].date()
+                    delta_days = data_start_date - existing_end_date
+                    if delta_days.days >= 5:
+                        logger.error('New data insertion for {ric} creates a gap of >= 5 days [{data_start_date},{existing_end_date}], please check!! aborting...')
+                        sys.exit(1)
                     # ignore those dates which are there in data
                     ignored = np.isin(existing.index, data.index)
-                    data = pd.concat((existing[~ignored], data), sort=True)
+                    data = pd.concat((existing[~ignored], data)).sort_index()
+                    
                 # hold a pointer to data for checks
                 data_ = data
                 # if we dont have much as we could be at the start of the
@@ -57,9 +65,13 @@ async def upsert(tickers, eod_data):
                 # data checks, winsorisation if any..
                 if len(data_) > 20:
                     # detect gaps
-                    max_gap = data_.index.diff().days.fillna(0).max()
+                    gap_ts = data_.index.diff().days.fillna(0)
+                    max_gap = gap_ts.max()
                     if max_gap >= 5:
-                        logger.warning(f'{max_gap} days gap detected for {ric}, please check!!')
+                        max_gap_idx = np.argmax(gap_ts)
+                        logger.error(f'{max_gap} days gap detected for {ric}, please check!! aborting...')
+                        logger.error(f'\n{data_.iloc[max_gap_idx-1:max_gap_idx+1]}')
+                        sys.exit(1)
                     # check if there is an outlier in the data
                     # this can be based on either percentage change
                     # or some std away from a rolling average
@@ -100,12 +112,15 @@ async def upsert(tickers, eod_data):
                 # write to parquet file
                 data.to_parquet(file_path, index=True, compression='gzip')
 
-async def download(tickers, period, batch=5):
+async def download(tickers, period, start_date, end_date, batch=5):
     tickers = tickers.split(',')
     batches = [tickers[i:i+batch] for i in range(0, len(tickers), batch)]
     for batch in batches:
         logger.info(f'Processing batch: {batch}')
-        eod_data = yf.download(tickers=' '.join(batch), period=period, group_by="tickers",auto_adjust=False)
+        if period:
+            eod_data = yf.download(tickers=' '.join(batch), period=period, group_by="tickers",auto_adjust=False)
+        else:
+            eod_data = yf.download(tickers=' '.join(batch), start=start_date, end=end_date, group_by="tickers",auto_adjust=False)
         if not eod_data.empty:
             eod_data.rename(columns={'Open':'open_px','High':'high_px','Low':'low_px','Close':'close_px',
                                      'Adj Close':'adj_factor','Volume':'volume'}, inplace=True)
@@ -122,13 +137,37 @@ async def download(tickers, period, batch=5):
               help='ric or , seperated list of rics')
 @click.option('--period',
               type=click.STRING,
-              default='5d',
+              default=None,
               required=False,
               show_default=True,
               help='1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max')
-def main(tickers, period):
+@click.option('--start_date',
+              type=click.DateTime(formats=utils.__valid_date_formats__),
+              default=None,
+              required=False,
+              show_default=True,
+              help='query start date')
+@click.option('--end_date',
+              type=click.DateTime(formats=utils.__valid_date_formats__),
+              default=None,
+              required=False,
+              show_default=True,
+              help='query end date')
+def main(tickers, period, start_date, end_date):
     """yfinance downloader"""
-    asyncio.run(download(tickers, period))
+    #print(f'{tickers} {period} {start_date} {end_date}')
+    if period:
+        if start_date or end_date:
+           raise click.BadParameter("'--period' cant be provided with '--start_date' and/or '--end_date'")
+    if start_date or end_date:
+        if not start_date:
+           raise click.BadParameter("'--end_date' cant be provided without '--start_date'")
+        if not end_date:
+           raise click.BadParameter("'--start_date' cant be provided without '--end_date'")
+        if start_date > end_date:
+           raise click.BadParameter("'--start_date' cant be > than '--end_date'")
+    #print(f'{tickers} {period} {start_date} {end_date}')
+    asyncio.run(download(tickers, period, start_date, end_date))
 
 if __name__ == "__main__":
     main()
