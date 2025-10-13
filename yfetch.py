@@ -69,12 +69,12 @@ async def upsert(tickers, eod_data):
                     c2c_ret = ((adj_close_px.ffill() / adj_close_px.ffill().shift(1)) - 1.0)*100.0
                     c2c_ret.name = 'c2c_ret'
                     # rolling mean of 5 days
-                    mu = adj_close_px.shift(1).rolling(5).mean()
-                    sd = adj_close_px.shift(1).rolling(5).std()
+                    mu = c2c_ret.shift(1).rolling(5).mean()
+                    sd = c2c_ret.shift(1).rolling(5).std()
                     min_level = mu - 5 * sd # < 5 std
                     max_level = mu + 5 * sd # > 5 std
-                    check_max = adj_close_px > max_level 
-                    check_min = adj_close_px < min_level 
+                    check_max = c2c_ret > max_level 
+                    check_min = c2c_ret < min_level 
                     # to show the previous entry to the outlier
                     check_max = check_max | check_max.shift(-1)
                     check_min = check_min | check_min.shift(-1)
@@ -90,6 +90,12 @@ async def upsert(tickers, eod_data):
                         logger.warning(f'Detected outliers for {ric} < -5 std (based on 5 day rolling mean), please check!')
                         #logger.warning(f"\n{data_.loc[check_min,['close_px','c2c_ret']]}")
                         logger.warning(f"\n{pd.concat((data_['close_px'],adj_close_px,c2c_ret),axis=1)[check_min]}")
+                    check_stale = c2c_ret == 0.0
+                    check_stale = check_stale | check_stale.shift(-1)
+                    check_stale.iloc[:-data_len] = False
+                    if np.any(check_stale):
+                        logger.warning(f'Detected stale prices for {ric}, please check!')
+                        logger.warning(f"\n{pd.concat((data_['close_px'],adj_close_px,c2c_ret),axis=1)[check_stale]}")
 
                 # write to parquet file
                 data.to_parquet(file_path, index=True, compression='gzip')
