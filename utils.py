@@ -16,5 +16,9 @@ def parse_date(str_date):
 def today():
     return dt.datetime.combine(dt.date.today(), dt.time(0))
 
-def yesterday():
-    return today() - dt.timedelta(days=1)
+__offsets__ = [3, 1, 1, 1, 1, 1, 2]
+def yesterday(ref_date=today(),business_day=False):
+    if not business_day:
+        return ref_date - dt.timedelta(days=1)
+    else:
+        return ref_date - dt.timedelta(days=__offsets__[ref_date.weekday()])
