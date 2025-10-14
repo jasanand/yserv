@@ -8,6 +8,8 @@ from logger import logger
 import pandas as pd
 import numpy as np
 import datetime as dt
+from yserv import _get_tickers
+import sys
 
 DB_DIR = './parquet'
 
@@ -16,7 +18,7 @@ async def upsert(tickers, eod_data):
     eod_data = eod_data.loc[eod_data.index.weekday < 5] 
     for ric in tickers:
         logger.info(f'Processing {ric}')
-        if ric in eod_data.columns.get_level_values(0):
+        if ric in eod_data.columns.get_level_values('ticker'):
             data = eod_data[ric]
             # derive the adjustment factor
             for year, data in eod_data[ric].groupby(eod_data.index.year):
@@ -112,20 +114,50 @@ async def upsert(tickers, eod_data):
                 data.to_parquet(file_path, index=True, compression='gzip')
 
 async def download(tickers, period, start_date, end_date, batch=5):
-    tickers = tickers.split(',')
-    batches = [tickers[i:i+batch] for i in range(0, len(tickers), batch)]
+    tickers = np.array(tickers.split(','))
+    batches = [(tickers[i:i+batch], (period,start_date,end_date)) for i in range(0, len(tickers), batch)]
+    if period:
+        # need to detect last entry for each ric and batch accordingly!! more work...
+        if period == 'auto':
+            end_date = utils.yesterday(business_day=True)
+            batches = []
+            _get_tickers.cache_clear()
+            db_tickers = (await _get_tickers()).set_index('ticker')
+            # what if there are new tickers !!??
+            # we need a default start_date else complain and exit
+            new_tickers_mask = ~np.isin(tickers, db_tickers.index.values)
+            if np.any(new_tickers_mask):
+                if not start_date:
+                    logger.warning(f"New tickers provided {tickers[new_tickers_mask]},\ncant identify default start date for new tickers with '--period=auto' mode, please also provide '--start_date'!! aborting...")
+                    sys.exit(1)
+                new_tickers = tickers[new_tickers_mask]
+                batches = [(new_tickers[i:i+batch], (None,start_date,end_date)) for i in range(0, len(new_tickers), batch)]
+                
+            # get the subset of the tickers we are interested in
+            tickers_subset = np.isin(db_tickers.index.values,tickers)
+            db_tickers = db_tickers.loc[tickers_subset]
+            db_tickers = db_tickers.reset_index()[['ticker','end_date']].groupby('end_date')['ticker'].apply(list)
+            #db_tickers.reset_index()[['ticker','end_date']].groupby('end_date',as_index=False)['ticker'].apply(list)
+            for item in db_tickers.items():
+                start_date = item[0].to_pydatetime()
+                upsert_tickers = [str(t) for t in item[1]]
+                batches.append([(upsert_tickers[i:i+batch], (None,start_date,end_date)) for i in range(0, len(upsert_tickers), batch)][0])
+
     for batch in batches:
-        logger.info(f'Processing batch: {batch}')
-        if period:
-            eod_data = yf.download(tickers=' '.join(batch), period=period, group_by="tickers",auto_adjust=False)
+        batch_tickers = batch[0]
+        batch_period, batch_start_date, batch_end_date = batch[1]
+        logger.info(f'Processing batch: tickers: {batch_tickers}, period: {batch_period}, start_date: {batch_start_date.date()}, end_date: {batch_end_date.date()}')
+        if batch_period:
+            eod_data = yf.download(tickers=' '.join(batch_tickers), period=batch_period, group_by="tickers",auto_adjust=False)
         else:
-            eod_data = yf.download(tickers=' '.join(batch), start=start_date, end=end_date, group_by="tickers",auto_adjust=False)
+            # to make end_date inclusive we add a day to it
+            eod_data = yf.download(tickers=' '.join(batch_tickers), start=batch_start_date, end=batch_end_date+dt.timedelta(days=1), group_by="tickers",auto_adjust=False)
         if not eod_data.empty:
             eod_data.rename(columns={'Open':'open_px','High':'high_px','Low':'low_px','Close':'close_px',
                                      'Adj Close':'adj_factor','Volume':'volume'}, inplace=True)
             eod_data.index.name = 'date'
             eod_data.columns.names=['ticker','price']
-            await upsert(batch, eod_data)
+            await upsert(batch_tickers, eod_data)
 
 @click.command()
 @click.option('--tickers',
@@ -139,7 +171,7 @@ async def download(tickers, period, start_date, end_date, batch=5):
               default=None,
               required=False,
               show_default=True,
-              help='1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max')
+              help='1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max,auto\n[auto: automatically detect last available date for present tickers and backfills till yesterday, please provide --start_date if there are any new tickers and auto option is used]')
 @click.option('--start_date',
               type=click.DateTime(formats=utils.__valid_date_formats__),
               default=None,
@@ -156,14 +188,18 @@ def main(tickers, period, start_date, end_date):
     """yfinance downloader"""
     #print(f'{tickers} {period} {start_date} {end_date}')
     if period:
-        if start_date or end_date:
-           raise click.BadParameter("'--period' cant be provided with '--start_date' and/or '--end_date'")
+        if period == 'auto':
+            if end_date:
+                raise click.BadParameter(f"'--period={period}' cant be provided with '--end_date'")
+        else:
+            if start_date or end_date:
+                raise click.BadParameter(f"'--period={period}' cant be provided with '--start_date' and/or '--end_date'")
     if start_date or end_date:
         if not start_date:
            raise click.BadParameter("'--end_date' cant be provided without '--start_date'")
-        if not end_date:
+        if not end_date and not period == 'auto':
            raise click.BadParameter("'--start_date' cant be provided without '--end_date'")
-        if start_date > end_date:
+        if start_date and end_date and start_date > end_date:
            raise click.BadParameter("'--start_date' cant be > than '--end_date'")
     #print(f'{tickers} {period} {start_date} {end_date}')
     asyncio.run(download(tickers, period, start_date, end_date))
