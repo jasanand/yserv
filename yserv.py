@@ -12,7 +12,7 @@ import pandas as pd
 import numpy as np
 from async_lru import alru_cache
 from pydantic import BaseModel, field_validator, AfterValidator, BeforeValidator
-from typing import Annotated
+from typing import Annotated, Optional
 
 app = FastAPI()
 app.add_middleware(GZipMiddleware, minimum_size=1000)
@@ -131,10 +131,10 @@ async def get_returns_by_tickers(params: Params1 = Depends()):
     return Response(eod_data.reset_index().to_json(orient='records',date_format='iso'), media_type='application/json')
 
 class Params2(BaseModel):
-    query_date: DatetimeParam
     tickers : str
+    query_date: DatetimeParam
 
-@app.get("/returns/{query_date}/{tickers}")
+@app.get("/returns/{tickers}/{query_date}")
 async def get_returns_by_date(params: Params2 = Depends()):
     eod_data = await _get_returns_by_tickers(params.tickers, params.query_date, params.query_date)
     return Response(eod_data.reset_index().to_json(orient='records',date_format='iso'), media_type='application/json')

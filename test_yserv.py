@@ -9,7 +9,7 @@ def test_tickers():
     response = requests.get(f'{YSERV_URL}/tickers')
     assert response.status_code == 200
     tickers = pd.read_json(StringIO(response_tickers.text),convert_dates=['start_date','end_date']).set_index('ticker')
-    logger.info(f'\n{tickers}')
+    #logger.info(f'\n{tickers}')
 
 def test_returns():
     response = requests.get(f'{YSERV_URL}/returns/AAPL/20231004/20250926')
@@ -20,7 +20,7 @@ def test_returns():
 
 def test_returns_by_date():
     # just after div date 20250808
-    response = requests.get(f'{YSERV_URL}/returns/20250811/NVDA,MSFT,AAPL,GOOG,AMZN,META')
+    response = requests.get(f'{YSERV_URL}/returns/NVDA,MSFT,AAPL,GOOG,AMZN,META/20250811')
     assert response.status_code == 200
     returns = pd.read_json(StringIO(response.text)).set_index('date')
     assert math.isclose(returns.sum(axis=1).iloc[0], np.float64(-0.0253342119))

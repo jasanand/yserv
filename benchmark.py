@@ -117,18 +117,18 @@ def benchmark_get_returns_by_tickers_load_test_randomize(state):
 
 def _get_returns_by_date_url(randomize=False):
     if not randomize:
-        return f'{YSERV_URL}/returns/20250811/{tickers}'
+        return f'{YSERV_URL}/returns/{tickers}/20250811'
     else:
         start_date = get_date()
         tickers_ = get_tickers()
-        url = f'{YSERV_URL}/returns/{str(start_date.date())}/{tickers_}'
+        url = f'{YSERV_URL}/returns/{tickers_}/{str(start_date.date())}'
         #print(url)
         return url
 
 def _get_returns_by_date(randomize=False):
     response = requests.get(_get_returns_by_date_url(randomize))
 
-@benchmark.register(name='[url: /returns/query_date/tickers] ')
+@benchmark.register(name='[url: /returns/tickers/query_date] ')
 @benchmark.option.iterations(1)
 @benchmark.option.repetitions(10)
 @benchmark.option.unit(benchmark.kMillisecond)
@@ -136,7 +136,7 @@ def benchmark_get_returns_by_date(state):
     while state:
         _get_returns_by_date()
 
-@benchmark.register(name='[url: /returns/query_date/tickers][random args] ')
+@benchmark.register(name='[url: /returns/tickers/query_date][random args] ')
 @benchmark.option.iterations(1)
 @benchmark.option.repetitions(10)
 @benchmark.option.unit(benchmark.kMillisecond)
