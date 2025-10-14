@@ -35,11 +35,21 @@ Usage: yfetch.py [OPTIONS]
   yfinance downloader
 
 Options:
-  --tickers TEXT  ric or , seperated list of rics  [default: NVDA,MSFT,AAPL,GO
-                  OG,AMZN,META,AVGO,TSLA,JPM,WMT,ORCL,LLY,V,MA,NFLX,XOM,JNJ,AB
-                  BV,PLTR,COST,HD,BAC,PG]
-  --period TEXT   1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max  [default: 5d]
-  --help          Show this message and exit.
+  --tickers TEXT                  ric or , seperated list of rics  [default: N
+                                  VDA,MSFT,AAPL,GOOG,AMZN,META,AVGO,TSLA,JPM,W
+                                  MT,ORCL,LLY,V,MA,NFLX,XOM,JNJ,ABBV,PLTR,COST
+                                  ,HD,BAC,PG]
+  --period TEXT                   1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max,auto
+                                  [auto: automatically detect last available
+                                  date for present tickers and backfills till
+                                  yesterday, please provide --start_date if
+                                  there are any new tickers and auto option is
+                                  used]
+  --start_date [%Y%m%d|%Y-%m-%d|%Y.%m.%d|%Y/%m/%d|%d/%m/%Y|%Y-%m-%dD%H:%M:%S.000000000|%Y-%m-%d %H:%M:%S]
+                                  query start date
+  --end_date [%Y%m%d|%Y-%m-%d|%Y.%m.%d|%Y/%m/%d|%d/%m/%Y|%Y-%m-%dD%H:%M:%S.000000000|%Y-%m-%d %H:%M:%S]
+                                  query end date
+  --help                          Show this message and exit.
 
 
 ./yserv --help
