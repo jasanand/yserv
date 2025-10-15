@@ -1,6 +1,5 @@
 import asyncio
 import click
-import utils
 from utils import *
 import yfinance as yf
 from sqlalchemy.dialects.sqlite import insert
@@ -179,13 +178,13 @@ async def download(tickers, period, start_date, end_date, batch=5):
               show_default=True,
               help='1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max,auto\n[auto: automatically detect last available date for present tickers and backfills till yesterday, please provide --start_date if there are any new tickers and auto option is used]')
 @click.option('--start_date',
-              type=click.DateTime(formats=utils.__valid_date_formats__),
+              type=click.DateTime(formats=valid_date_formats),
               default=None,
               required=False,
               show_default=True,
               help='query start date')
 @click.option('--end_date',
-              type=click.DateTime(formats=utils.__valid_date_formats__),
+              type=click.DateTime(formats=valid_date_formats),
               default=None,
               required=False,
               show_default=True,
