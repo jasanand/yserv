@@ -1,2 +1,3 @@
 version: 1
+# location where to store/load parquet files from
 db_dir: '${SCRIPT_DIR}/parquet'
