@@ -25,8 +25,6 @@ Utilities:
 
 Requirements: included in requirements.txt (pip freeze)
 
-Data: includes parquet folder with 20+ rics and 2 years worth of data
-
 usage:
 
  ./yfetch --help
@@ -62,4 +60,6 @@ Options:
   --port INTEGER  port  [default: 8000]
   --help          Show this message and exit.
 
-Note: postman available at http://host:port/docs when yserv is running
+Notes: 
+1. postman available at http://host:port/docs when yserv is running
+2. specify data dir location in app_config.yaml
