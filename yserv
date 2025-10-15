@@ -1,5 +1,6 @@
 #!/bin/bash
 # ctrl-c to stop
-python3 yserv.py $@ 2>&1
+export SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+python3 ${SCRIPT_DIR}/yserv.py $@ 2>&1
 # to detach from terminal
 # nohup python3 yserv.py $@ 2>&1

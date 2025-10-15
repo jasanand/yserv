@@ -1,2 +1,3 @@
 #!/bin/bash
-python3 yfetch.py $@ 2>&1
+export SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+python3 ${SCRIPT_DIR}/yfetch.py $@ 2>&1

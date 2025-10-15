@@ -1,0 +1,2 @@
+version: 1
+db_dir: '${SCRIPT_DIR}/parquet'

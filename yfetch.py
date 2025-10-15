@@ -1,6 +1,7 @@
 import asyncio
 import click
 import utils
+from utils import *
 import yfinance as yf
 from sqlalchemy.dialects.sqlite import insert
 import os
@@ -11,7 +12,11 @@ import datetime as dt
 from yserv import _get_tickers
 import sys
 
-DB_DIR = './parquet'
+app_config = ApplicationConfig(__file__)
+base_dir = app_config.data.base_dir()
+
+#DB_DIR = os.path.join(os.path.dirname(__file__), "parquet")
+DB_DIR = app_config.data.db_dir()
 
 async def upsert(tickers, eod_data):
     # ensure we only have weekdays
@@ -46,7 +51,7 @@ async def upsert(tickers, eod_data):
                     data_start_date = data.index[0].date()
                     delta_days = data_start_date - existing_end_date
                     if delta_days.days >= 5:
-                        logger.error('New data insertion for {ric} creates a gap of >= 5 days [{data_start_date},{existing_end_date}], please check!! aborting...')
+                        logger.error(f'New data insertion for {ric} creates a gap of >= 5 days [{existing_end_date} : {data_start_date}], please check!! aborting...')
                         sys.exit(1)
                     # ignore those dates which are there in data
                     ignored = np.isin(existing.index, data.index)
@@ -119,7 +124,7 @@ async def download(tickers, period, start_date, end_date, batch=5):
     if period:
         # need to detect last entry for each ric and batch accordingly!! more work...
         if period == 'auto':
-            end_date = utils.yesterday(business_day=True)
+            end_date = yesterday(business_day=True)
             batches = []
             _get_tickers.cache_clear()
             db_tickers = (await _get_tickers()).set_index('ticker')
@@ -146,10 +151,11 @@ async def download(tickers, period, start_date, end_date, batch=5):
     for batch in batches:
         batch_tickers = batch[0]
         batch_period, batch_start_date, batch_end_date = batch[1]
-        logger.info(f'Processing batch: tickers: {batch_tickers}, period: {batch_period}, start_date: {batch_start_date.date()}, end_date: {batch_end_date.date()}')
         if batch_period:
+            logger.info(f'Processing batch: tickers: {batch_tickers}, period: {batch_period}')
             eod_data = yf.download(tickers=' '.join(batch_tickers), period=batch_period, group_by="tickers",auto_adjust=False)
         else:
+            logger.info(f'Processing batch: tickers: {batch_tickers}, start_date: {batch_start_date.date()}, end_date: {batch_end_date.date()}')
             # to make end_date inclusive we add a day to it
             eod_data = yf.download(tickers=' '.join(batch_tickers), start=batch_start_date, end=batch_end_date+dt.timedelta(days=1), group_by="tickers",auto_adjust=False)
         if not eod_data.empty:
@@ -186,7 +192,8 @@ async def download(tickers, period, start_date, end_date, batch=5):
               help='query end date')
 def main(tickers, period, start_date, end_date):
     """yfinance downloader"""
-    #print(f'{tickers} {period} {start_date} {end_date}')
+    logger.info(f"DB_DIR: {DB_DIR}")
+
     if period:
         if period == 'auto':
             if end_date:
@@ -194,6 +201,7 @@ def main(tickers, period, start_date, end_date):
         else:
             if start_date or end_date:
                 raise click.BadParameter(f"'--period={period}' cant be provided with '--start_date' and/or '--end_date'")
+
     if start_date or end_date:
         if not start_date:
            raise click.BadParameter("'--end_date' cant be provided without '--start_date'")
@@ -201,7 +209,10 @@ def main(tickers, period, start_date, end_date):
            raise click.BadParameter("'--start_date' cant be provided without '--end_date'")
         if start_date and end_date and start_date > end_date:
            raise click.BadParameter("'--start_date' cant be > than '--end_date'")
-    #print(f'{tickers} {period} {start_date} {end_date}')
+
+    if not period and not start_date and not end_date:
+        raise click.BadArgumentUsage("Please provide an option '--period' or a combination of '--start_date' and '--end_date'") 
+
     asyncio.run(download(tickers, period, start_date, end_date))
 
 if __name__ == "__main__":

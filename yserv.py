@@ -13,11 +13,16 @@ import numpy as np
 from async_lru import alru_cache
 from pydantic import BaseModel, field_validator, AfterValidator, BeforeValidator
 from typing import Annotated, Optional
+from logger import logger
 
 app = FastAPI()
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 
-DB_DIR = os.path.join(os.path.dirname(__file__), "parquet")
+app_config = ApplicationConfig(__file__)
+base_dir = app_config.data.base_dir()
+
+#DB_DIR = os.path.join(os.path.dirname(__file__), "parquet")
+DB_DIR = app_config.data.db_dir()
 
 @alru_cache(maxsize=1)
 async def _get_tickers():
@@ -154,6 +159,8 @@ async def get_returns_by_date(params: Params2 = Depends()):
               help='port')
 def main(host, port):
     """yfinance rest service"""
+    logger.info(f"DB_DIR: {DB_DIR}")
+
     #import uvicorn
     #uvicorn.run(app, host=host, port=port)
     
