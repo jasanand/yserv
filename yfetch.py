@@ -176,7 +176,7 @@ async def download(tickers, period, start_date, end_date, batch=5):
               default=None,
               required=False,
               show_default=True,
-              help='1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max,auto\n[auto: automatically detect last available date for present tickers and backfills till yesterday, please provide --start_date if there are any new tickers and auto option is used]')
+              help='1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max,auto\n[auto: automatically detect last available date for present tickers and backfills till yesterday, please also provide --start_date if there are any new tickers and auto option is used, start_date will be applied on new tickers only]')
 @click.option('--start_date',
               type=click.DateTime(formats=valid_date_formats),
               default=None,
