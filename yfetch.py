@@ -13,6 +13,9 @@ import sys
 
 app_config = ApplicationConfig(__file__)
 base_dir = app_config.data.base_dir()
+ 
+__default_rics__='NVDA,MSFT,AAPL,GOOG,AMZN,META,AVGO,TSLA,JPM,WMT,ORCL,LLY,V,MA,NFLX,XOM,JNJ,ABBV,PLTR,COST,HD,BAC,PG'
+#__default_rics__='NVDA,MSFT,AAPL,GOOG,AMZN,META,TSLA,ORCL,NFLX,PLTR,SPY'
 
 #DB_DIR = os.path.join(os.path.dirname(__file__), "parquet")
 DB_DIR = app_config.data.db_dir()
@@ -39,7 +42,8 @@ async def upsert(tickers, eod_data):
                 # a tab on how much data is being updated
                 data_len = len(data)
                 dir_path = os.path.join(DB_DIR, f'{ric}')
-                os.makedirs(dir_path, exist_ok=True)
+                if not os.path.exists(dir_path):
+                    os.makedirs(dir_path)
                 file_path = os.path.join(dir_path, f'{year}.parquet')
                 # need to check if file already exists, if it does then we need to
                 # update the existing version...
@@ -167,7 +171,7 @@ async def download(tickers, period, start_date, end_date, batch=5):
 @click.command()
 @click.option('--tickers',
               type=click.STRING,
-              default='NVDA,MSFT,AAPL,GOOG,AMZN,META,AVGO,TSLA,JPM,WMT,ORCL,LLY,V,MA,NFLX,XOM,JNJ,ABBV,PLTR,COST,HD,BAC,PG',
+              default=__default_rics__,
               required=False,
               show_default=True,
               help='ric or , seperated list of rics')
